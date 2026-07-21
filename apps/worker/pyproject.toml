@@ -11,6 +11,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "httpx2>=2.7.0",
+    "pytest>=9.1.1",
     "ruff>=0.15.22",
 ]
 
@@ -20,3 +22,6 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
