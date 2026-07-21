@@ -1,0 +1,8 @@
+{
+  "name": "duely",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
