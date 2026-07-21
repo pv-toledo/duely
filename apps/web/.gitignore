@@ -1,0 +1,12 @@
+# next.js
+/.next/
+/out/
+
+# testing
+/coverage
+
+# local https certs (next dev --experimental-https)
+*.pem
+
+# next.js generated types
+next-env.d.ts
