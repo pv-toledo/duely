@@ -8,5 +8,12 @@
   "allowScripts": {
     "sharp@0.34.5": true,
     "unrs-resolver@1.12.2": true
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.1.1"
+  },
+  "scripts": {
+    "prepare": "husky"
   }
 }
