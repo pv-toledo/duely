@@ -1,6 +1,6 @@
 export default {
   "apps/web/**/*.{js,jsx,ts,tsx}": [
-    "eslint --config apps/web/eslint.config.mjs --fix",
+    "eslint --config apps/web/eslint.config.mjs --fix --max-warnings=0",
     "prettier --write",
   ],
   "apps/web/**/*.{json,css,md}": ["prettier --write"],
