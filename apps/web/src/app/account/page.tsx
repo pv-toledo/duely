@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { logout } from "../(auth)/actions";
+import { createClient } from "@/lib/supabase/server";
+import { logout } from "@/app/(auth)/actions";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -12,13 +13,20 @@ export default async function AccountPage() {
   }
 
   return (
-    <main>
-      <p>Signed in as {data.claims.email}</p>
-      <form action={logout}>
-        <Button type="submit" variant="outline">
-          Sign out
-        </Button>
-      </form>
+    <main className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>Account</CardTitle>
+          <CardDescription>{data.claims.email}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={logout}>
+            <Button type="submit" variant="outline" className="w-full">
+              Sign out
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </main>
   );
 }
