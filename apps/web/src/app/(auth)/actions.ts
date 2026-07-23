@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { Credentials, credentialsSchema } from "./schema";
 
 export async function signup(credentials: Credentials) {
-  const parsed = await credentialsSchema.safeParseAsync(credentials);
+  const parsed = await credentialsSchema.safeParse(credentials);
   if (!parsed.success) {
     return {
       error: "Invalid data",
@@ -37,7 +37,7 @@ export async function login(credentials: Credentials) {
 
   if (error) {
     return {
-      error: "Invalid data",
+      error: error.message,
     };
   }
 

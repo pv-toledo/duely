@@ -2,6 +2,9 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { env } from "@/lib/env";
 
+const publicRoutes = ["/", "/signup", "/login"];
+const authRoutes = ["/signup", "/login"];
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -24,7 +27,17 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  await supabase.auth.getClaims();
+  const { data, error } = await supabase.auth.getClaims();
+  const isAuthenticated = !error && !!data;
+  const { pathname } = request.nextUrl;
+
+  if (!isAuthenticated && !publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (isAuthenticated && authRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/account", request.url));
+  }
 
   return supabaseResponse;
 }
