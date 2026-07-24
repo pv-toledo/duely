@@ -15,6 +15,6 @@
     "supabase": "^2.109.1"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky || true"
   }
 }
