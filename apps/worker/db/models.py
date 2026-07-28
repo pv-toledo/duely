@@ -8,6 +8,13 @@ from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR
 from sqlalchemy.orm import Mapped, mapped_column
 
 from db.base import Base
+from db.enums import (
+    DeadlineRecurrence,
+    DeadlineStatus,
+    DocumentCategory,
+    DocumentStatus,
+    pg_text_enum,
+)
 
 
 class Document(Base):
@@ -18,8 +25,10 @@ class Document(Base):
     storage_path: Mapped[str]
     original_filename: Mapped[str]
     mime_type: Mapped[str]
-    status: Mapped[str] = mapped_column(server_default="pending")
-    category: Mapped[str | None]
+    status: Mapped[DocumentStatus] = mapped_column(
+        pg_text_enum(DocumentStatus), server_default="pending"
+    )  # noqa: E501
+    category: Mapped[DocumentCategory | None] = mapped_column(pg_text_enum(DocumentCategory))
     document_type: Mapped[str | None]
     subject_name: Mapped[str | None]
     issuer_name: Mapped[str | None]
@@ -59,8 +68,12 @@ class Deadline(Base):
     title: Mapped[str]
     due_date: Mapped[date]
     amount: Mapped[Decimal | None] = mapped_column(Numeric)
-    recurrence: Mapped[str] = mapped_column(server_default="none")
-    status: Mapped[str] = mapped_column(server_default="active")
+    recurrence: Mapped[DeadlineRecurrence] = mapped_column(
+        pg_text_enum(DeadlineRecurrence), server_default="none"
+    )  # noqa: E501
+    status: Mapped[DeadlineStatus] = mapped_column(
+        pg_text_enum(DeadlineStatus), server_default="active"
+    )  # noqa: E501
     created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
 
 
