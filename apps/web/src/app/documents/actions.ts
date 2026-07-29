@@ -1,23 +1,22 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { checkImageResolutionServer } from "@/lib/upload/check-image-resolution-server";
 import { MIME_TO_EXTENSION } from "@/lib/upload/constraints";
 import { validateFileTypeAndSize } from "@/lib/upload/validate-file";
 
+export type UploadFailureReason =
+  | "not_authenticated"
+  | "invalid_type"
+  | "file_too_large"
+  | "image_too_small"
+  | "unreadable_image"
+  | "upload_failed"
+  | "insert_failed";
+
 type UploadDocumentResult =
-  | { success: true; documentId: string }
-  | {
-      success: false;
-      reason:
-        | "not_authenticated"
-        | "invalid_type"
-        | "file_too_large"
-        | "image_too_small"
-        | "unreadable_image"
-        | "upload_failed"
-        | "insert_failed";
-    };
+  { success: true; documentId: string } | { success: false; reason: UploadFailureReason };
 
 export async function uploadDocumentAction(file: File): Promise<UploadDocumentResult> {
   const supabase = await createClient();
@@ -66,5 +65,6 @@ export async function uploadDocumentAction(file: File): Promise<UploadDocumentRe
     return { success: false, reason: "insert_failed" };
   }
 
+  revalidatePath("/documents");
   return { success: true, documentId };
 }
