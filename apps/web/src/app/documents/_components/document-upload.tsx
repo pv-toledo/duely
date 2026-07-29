@@ -7,8 +7,8 @@ import { Camera, CircleAlert, CircleCheck, Upload } from "lucide-react";
 import { uploadDocumentAction, type UploadFailureReason } from "../actions";
 import { ALLOWED_MIME_TYPES, MAX_UPLOAD_SIZE_BYTES } from "@/lib/upload/constraints";
 import { checkImageResolution } from "@/lib/upload/check-image-resolution";
-import { compressImageToWebp } from "@/lib/upload/compress-image";
 import { getRawInputSizeCeiling, validateFileTypeAndSize } from "@/lib/upload/validate-file";
+import { compressImageToWebp, withExtension } from "@/lib/upload/compress-image";
 
 type ClientFailureReason = UploadFailureReason | "compression_failed";
 
@@ -57,9 +57,11 @@ export function DocumentUpload() {
         }
 
         if (resolution.checked) {
-          const compressed = await compressImageToWebp(file, resolution.width, resolution.height);
+          const compressed = await compressImageToWebp(file);
           if (compressed.converted) {
-            uploadFile = new File([compressed.blob], file.name, { type: "image/webp" });
+            uploadFile = new File([compressed.blob], withExtension(file.name, "webp"), {
+              type: "image/webp",
+            });
           }
         }
 
