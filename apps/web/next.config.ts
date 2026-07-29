@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       allowedOrigins: codespaceOrigins,
+      bodySizeLimit: "20mb",
     },
   },
 };

@@ -3,7 +3,7 @@
 import { imageDimensionsFromStream } from "image-dimensions";
 import { MIN_IMAGE_DIMENSION_PX } from "./constraints";
 
-type ImageResolutionResult = { checked: true; meetsMinimum: boolean } | { checked: false }; // PDF, ou formato que o parser não reconhece
+type ImageResolutionResult = { checked: true; meetsMinimum: boolean } | { checked: false };
 
 export async function checkImageResolution(file: File): Promise<ImageResolutionResult> {
   if (!file.type.startsWith("image/")) {
