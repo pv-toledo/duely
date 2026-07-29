@@ -16,7 +16,7 @@ export const MIME_TO_EXTENSION: Record<(typeof ALLOWED_MIME_TYPES)[number], stri
 
 export const MIN_IMAGE_DIMENSION_PX = 1000;
 
-export const MAX_RAW_INPUT_SIZE_BYTES = 20 * 1024 * 1024;
+export const MAX_RAW_INPUT_SIZE_BYTES = 50 * 1024 * 1024;
 
 export const MAX_UPLOAD_SIZE_BYTES = 4 * 1024 * 1024;
 
