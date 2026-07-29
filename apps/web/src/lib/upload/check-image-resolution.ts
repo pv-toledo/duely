@@ -3,7 +3,8 @@
 import { imageDimensionsFromStream } from "image-dimensions";
 import { MIN_IMAGE_DIMENSION_PX } from "./constraints";
 
-type ImageResolutionResult = { checked: true; meetsMinimum: boolean } | { checked: false };
+type ImageResolutionResult =
+  { checked: true; meetsMinimum: boolean; width: number; height: number } | { checked: false };
 
 export async function checkImageResolution(file: File): Promise<ImageResolutionResult> {
   if (!file.type.startsWith("image/")) {
@@ -16,5 +17,10 @@ export async function checkImageResolution(file: File): Promise<ImageResolutionR
   }
 
   const shorterSide = Math.min(dimensions.width, dimensions.height);
-  return { checked: true, meetsMinimum: shorterSide >= MIN_IMAGE_DIMENSION_PX };
+  return {
+    checked: true,
+    meetsMinimum: shorterSide >= MIN_IMAGE_DIMENSION_PX,
+    width: dimensions.width,
+    height: dimensions.height,
+  };
 }
