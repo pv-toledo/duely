@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DocumentStatusBadge } from "./_components/document-status-badge";
 import { DocumentUpload } from "./_components/document-upload";
 import { DocumentStatus } from "@duely/shared";
+import { truncateFilename } from "@/lib/format-filename";
 
 export default async function DocumentsPage() {
   const supabase = await createClient();
@@ -12,7 +13,7 @@ export default async function DocumentsPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-8 p-6">
+    <div className="mx-auto flex max-w-2xl flex-col gap-8">
       <h1 className="font-display text-3xl font-normal tracking-tight">Documents</h1>
 
       <DocumentUpload />
@@ -31,7 +32,12 @@ export default async function DocumentsPage() {
             key={document.id}
             className="flex items-center justify-between gap-4 rounded-lg border border-border p-4"
           >
-            <span className="truncate text-sm font-medium">{document.original_filename}</span>
+            <span
+              title={document.original_filename}
+              className="min-w-0 flex-1 truncate text-sm font-medium"
+            >
+              {truncateFilename(document.original_filename)}
+            </span>
             <div className="flex shrink-0 items-center gap-3">
               <span className="text-xs text-muted-foreground tabular-nums">
                 {new Date(document.created_at).toLocaleDateString("en-US")}
