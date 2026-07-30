@@ -68,3 +68,30 @@ export async function uploadDocumentAction(file: File): Promise<UploadDocumentRe
   revalidatePath("/documents");
   return { success: true, documentId };
 }
+
+export async function deleteDocumentAction(
+  documentId: string
+): Promise<{ success: true } | { success: false; reason: "not_authenticated" | "delete_failed" }> {
+  const supabase = await createClient();
+
+  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+  if (claimsError || !claimsData) {
+    return { success: false, reason: "not_authenticated" };
+  }
+
+  const { data: deletedDocument, error: deleteError } = await supabase
+    .from("documents")
+    .delete()
+    .eq("id", documentId)
+    .select("storage_path")
+    .single();
+
+  if (deleteError || !deletedDocument) {
+    return { success: false, reason: "delete_failed" };
+  }
+
+  await supabase.storage.from("documents").remove([deletedDocument.storage_path]);
+
+  revalidatePath("/documents");
+  return { success: true };
+}

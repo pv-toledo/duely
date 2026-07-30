@@ -1,29 +1,22 @@
 "use client";
 
-import { Menu } from "lucide-react";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { UserMenu } from "./user-menu";
 
-export function Topbar({
-  onMenuClick,
-  userEmail,
-  userName,
-}: {
-  onMenuClick: () => void;
-  userEmail: string;
-  userName?: string;
-}) {
+export function Topbar({ userEmail, userName }: { userEmail: string; userName?: string }) {
+  const { isMobile } = useSidebar();
+
   return (
-    <header className="flex h-14 items-center border-b border-border px-4 lg:px-6">
-      <button
-        type="button"
-        onClick={onMenuClick}
-        className="text-muted-foreground lg:hidden"
-        aria-label="Open navigation"
-      >
-        <Menu className="size-5" />
-      </button>
-      <div className="ml-auto">
-        <UserMenu userEmail={userEmail} userName={userName} />
+    <header className="border-b border-border">
+      <div className="mx-auto flex h-14 w-full max-w-5xl items-center px-4">
+        {isMobile ? (
+          <SidebarTrigger />
+        ) : (
+          <span className="font-display text-2xl tracking-tight">Duely</span>
+        )}
+        <div className="ml-auto">
+          <UserMenu userEmail={userEmail} userName={userName} />
+        </div>
       </div>
     </header>
   );

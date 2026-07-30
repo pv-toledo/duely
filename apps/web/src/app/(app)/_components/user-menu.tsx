@@ -5,6 +5,7 @@ import { LogOut } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -34,11 +35,15 @@ export function UserMenu({ userEmail, userName }: { userEmail: string; userName?
       >
         {initialFrom(displayName)}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span className="text-sm font-medium">{displayName}</span>
-          {userName && <span className="text-xs text-muted-foreground">{userEmail}</span>}
-        </DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-64">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="flex flex-col gap-0.5">
+            <span className="truncate text-sm font-medium">{displayName}</span>
+            {userName && (
+              <span className="truncate text-xs text-muted-foreground">{userEmail}</span>
+            )}
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} disabled={isPending}>
           <LogOut />

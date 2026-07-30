@@ -1,14 +1,14 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { FormButton } from "@/components/form-controls";
 import { Camera, CircleAlert, CircleCheck, Upload } from "lucide-react";
 import { uploadDocumentAction, type UploadFailureReason } from "../actions";
 import { ALLOWED_MIME_TYPES, MAX_UPLOAD_SIZE_BYTES } from "@/lib/upload/constraints";
 import { checkImageResolution } from "@/lib/upload/check-image-resolution";
-import { getRawInputSizeCeiling, validateFileTypeAndSize } from "@/lib/upload/validate-file";
 import { compressImageToWebp, withExtension } from "@/lib/upload/compress-image";
+import { getRawInputSizeCeiling, validateFileTypeAndSize } from "@/lib/upload/validate-file";
 
 type ClientFailureReason = UploadFailureReason | "compression_failed";
 
@@ -24,6 +24,8 @@ const ERROR_MESSAGES: Record<ClientFailureReason, string> = {
     "We couldn't prepare this photo for upload. Try a different photo or a smaller file.",
 };
 
+const SUCCESS_FLASH_DURATION_MS = 3000;
+
 export function DocumentUpload() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -33,6 +35,12 @@ export function DocumentUpload() {
   const isBusy = isProcessing || isPending;
 
   const cameraInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isSuccess) return;
+    const timeout = setTimeout(() => setIsSuccess(false), SUCCESS_FLASH_DURATION_MS);
+    return () => clearTimeout(timeout);
+  }, [isSuccess]);
 
   async function handleFile(file: File) {
     setErrorMessage(null);
@@ -99,11 +107,6 @@ export function DocumentUpload() {
     if (file) handleFile(file);
   }
 
-  function reset() {
-    setErrorMessage(null);
-    setIsSuccess(false);
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <label
@@ -113,23 +116,40 @@ export function DocumentUpload() {
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className={`flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed p-10 text-center ${
+        className={`flex min-h-36 flex-col items-center justify-center gap-3 rounded-lg border p-8 text-center ${
           isBusy ? "cursor-not-allowed opacity-60" : "cursor-pointer"
-        } ${isDragging ? "border-primary" : "border-input"}`}
+        } ${
+          isSuccess
+            ? "border-success bg-success-bg"
+            : isDragging
+              ? "border-dashed border-primary"
+              : "border-dashed border-input"
+        }`}
       >
-        <Upload className="text-muted-foreground" size={28} />
-        <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium">
-            {isProcessing
-              ? "Preparing…"
-              : isPending
-                ? "Uploading…"
-                : "Drag and drop a document, or click to browse"}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            JPEG, PNG, HEIC, WebP or PDF — photos are optimized automatically; PDFs up to 4MB
-          </p>
-        </div>
+        {isSuccess ? (
+          <>
+            <CircleCheck className="text-success" size={28} />
+            <p className="text-sm font-medium text-success">
+              Document uploaded and queued for review
+            </p>
+          </>
+        ) : (
+          <>
+            <Upload className="text-muted-foreground" size={28} />
+            <div className="flex flex-col gap-1">
+              <p className="text-sm font-medium">
+                {isProcessing
+                  ? "Preparing…"
+                  : isPending
+                    ? "Uploading…"
+                    : "Drag and drop a document, or click to browse"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                JPEG, PNG, HEIC, WebP or PDF — photos are optimized automatically; PDFs up to 4MB
+              </p>
+            </div>
+          </>
+        )}
         <input
           type="file"
           accept={ALLOWED_MIME_TYPES.join(",")}
@@ -162,22 +182,6 @@ export function DocumentUpload() {
           <CircleAlert />
           <AlertTitle>{errorMessage}</AlertTitle>
         </Alert>
-      )}
-
-      {isSuccess && (
-        <>
-          <Alert>
-            <CircleCheck />
-            <AlertTitle>Document uploaded and queued for review.</AlertTitle>
-          </Alert>
-          <button
-            type="button"
-            onClick={reset}
-            className="self-start text-sm underline underline-offset-2"
-          >
-            Upload another
-          </button>
-        </>
       )}
     </div>
   );

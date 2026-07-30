@@ -19,7 +19,7 @@ export async function signup(credentials: SignupCredentials) {
     return { error: error.message };
   }
 
-  redirect("/account");
+  redirect("/documents");
 }
 
 export async function login(credentials: LoginCredentials) {
@@ -35,7 +35,7 @@ export async function login(credentials: LoginCredentials) {
     return { error: error.message };
   }
 
-  redirect("/account");
+  redirect("/documents");
 }
 
 export async function logout() {
