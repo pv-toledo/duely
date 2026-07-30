@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { DocumentUpload } from "./_components/document-upload";
-import { DocumentStatus } from "@duely/shared";
-import { DocumentRow } from "./_components/document-row";
+import { DocumentList, type DocumentListItem } from "./_components/document-list";
 
 export default async function DocumentsPage() {
   const supabase = await createClient();
@@ -17,25 +16,11 @@ export default async function DocumentsPage() {
 
       <DocumentUpload />
 
-      <div className="flex flex-col gap-2">
-        {error && (
-          <p className="text-sm text-muted-foreground">Couldn&apos;t load your documents.</p>
-        )}
-
-        {!error && documents?.length === 0 && (
-          <p className="text-sm text-muted-foreground">No documents yet.</p>
-        )}
-
-        {documents?.map((document) => (
-          <DocumentRow
-            key={document.id}
-            id={document.id}
-            originalFilename={document.original_filename}
-            status={document.status as DocumentStatus}
-            createdAt={document.created_at}
-          />
-        ))}
-      </div>
+      {error ? (
+        <p className="text-sm text-muted-foreground">Couldn&apos;t load your documents.</p>
+      ) : (
+        <DocumentList initialDocuments={(documents ?? []) as DocumentListItem[]} />
+      )}
     </div>
   );
 }

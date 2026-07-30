@@ -1,7 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server"; // ajuste o nome se for diferente no seu server.ts
+import { createClient } from "@/lib/supabase/server";
 import { checkImageResolutionServer } from "@/lib/upload/check-image-resolution-server";
 import { MAX_UPLOAD_SIZE_BYTES, MIME_TO_EXTENSION } from "@/lib/upload/constraints";
 import { validateFileTypeAndSize } from "@/lib/upload/validate-file";
@@ -65,7 +64,6 @@ export async function uploadDocumentAction(file: File): Promise<UploadDocumentRe
     return { success: false, reason: "insert_failed" };
   }
 
-  revalidatePath("/documents");
   return { success: true, documentId };
 }
 
@@ -92,6 +90,5 @@ export async function deleteDocumentAction(
 
   await supabase.storage.from("documents").remove([deletedDocument.storage_path]);
 
-  revalidatePath("/documents");
   return { success: true };
 }

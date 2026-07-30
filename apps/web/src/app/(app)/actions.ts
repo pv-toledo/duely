@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server"; // ajuste o nome se for diferente no seu server.ts
+import { createClient } from "@/lib/supabase/server";
 
 export async function logoutAction() {
   const supabase = await createClient();

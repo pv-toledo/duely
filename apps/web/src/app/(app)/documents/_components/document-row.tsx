@@ -25,17 +25,22 @@ export function DocumentRow({
   originalFilename,
   status,
   createdAt,
+  onDeleted,
 }: {
   id: string;
   originalFilename: string;
   status: DocumentStatus;
   createdAt: string;
+  onDeleted: (id: string) => void;
 }) {
   const [isPending, startTransition] = useTransition();
 
   function handleDelete() {
     startTransition(async () => {
-      await deleteDocumentAction(id);
+      const result = await deleteDocumentAction(id);
+      if (result.success) {
+        onDeleted(id);
+      }
     });
   }
 
