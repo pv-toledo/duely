@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=_ENV_FILE, env_file_encoding="utf-8")
 
     database_url: str
+    supabase_url: str
+    supabase_secret_key: str
 
 
 settings = Settings()
