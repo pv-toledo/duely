@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     database_url: str
     supabase_url: str
     supabase_secret_key: str
+    google_gemini_api_key: str
 
 
 settings = Settings()
