@@ -103,7 +103,7 @@ async def requeue_document(document_id: PyUUID) -> None:
 async def get_extraction_pause() -> datetime | None:
     """Returns the pause end time if the daily Gemini quota is currently
     exhausted, or None if there's no active pause. The comparison happens in
-    SQL (paused_until > now()) so it's Postgres's clock deciding, not ours."""
+    SQL (paused_until > now()) so it's Postgres's clock deciding."""
     async with async_session_factory() as session:
         result = await session.execute(
             select(ExtractionStatus.paused_until).where(
