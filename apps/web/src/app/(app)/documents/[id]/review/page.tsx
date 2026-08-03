@@ -11,7 +11,7 @@ export default async function DocumentReviewPage({ params }: { params: Promise<{
   const { data: document, error: documentError } = await supabase
     .from("documents")
     .select(
-      "id, status, category, document_type, subject_name, issuer_name, original_filename, storage_path"
+      "id, status, category, document_type, subject_name, issuer_name, original_filename, storage_path, mime_type"
     )
     .eq("id", id)
     .single();
@@ -44,12 +44,20 @@ export default async function DocumentReviewPage({ params }: { params: Promise<{
     <div className="flex w-full flex-col gap-8 lg:flex-row">
       <div className="lg:w-1/2">
         {signedUrlData?.signedUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={signedUrlData.signedUrl}
-            alt={document.original_filename}
-            className="w-full rounded-lg border border-border"
-          />
+          document.mime_type === "application/pdf" ? (
+            <iframe
+              src={signedUrlData.signedUrl}
+              title={document.original_filename}
+              className="h-[75vh] w-full rounded-lg border border-border"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={signedUrlData.signedUrl}
+              alt={document.original_filename}
+              className="w-full rounded-lg border border-border"
+            />
+          )
         ) : (
           <p className="text-sm text-muted-foreground">Couldn&apos;t load the document image.</p>
         )}
