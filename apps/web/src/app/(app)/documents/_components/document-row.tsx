@@ -19,6 +19,7 @@ import { truncateFilename } from "@/lib/format-filename";
 import type { DocumentStatus } from "@duely/shared";
 import { deleteDocumentAction } from "../actions";
 import { DocumentStatusBadge } from "./document-status-badge";
+import Link from "next/link";
 
 export function DocumentRow({
   id,
@@ -54,6 +55,14 @@ export function DocumentRow({
           {new Date(createdAt).toLocaleDateString("en-US")}
         </span>
         <DocumentStatusBadge status={status} />
+        {status === "needs_review" && (
+          <Link
+            href={`/documents/${id}/review`}
+            className={cn(buttonVariants({ variant: "outline" }))}
+          >
+            Review
+          </Link>
+        )}
         <AlertDialog>
           <AlertDialogTrigger
             disabled={isPending}
