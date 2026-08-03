@@ -131,6 +131,24 @@ export type Database = {
         };
         Relationships: [];
       };
+      extraction_status: {
+        Row: {
+          key: string;
+          paused_until: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          paused_until?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          key?: string;
+          paused_until?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       extractions: {
         Row: {
           description: string | null;
