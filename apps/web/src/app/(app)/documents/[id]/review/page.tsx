@@ -3,6 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { buildDefaultReviewValues } from "./defaults";
 import { ReviewForm } from "./_components/review-form";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default async function DocumentReviewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -45,11 +47,22 @@ export default async function DocumentReviewPage({ params }: { params: Promise<{
       <div className="lg:w-1/2">
         {signedUrlData?.signedUrl ? (
           document.mime_type === "application/pdf" ? (
-            <iframe
-              src={signedUrlData.signedUrl}
-              title={document.original_filename}
-              className="h-[75vh] w-full rounded-lg border border-border"
-            />
+            <>
+              <iframe
+                src={signedUrlData.signedUrl}
+                title={document.original_filename}
+                className="hidden h-[75vh] w-full rounded-lg border border-border lg:block"
+              />
+
+              <a
+                href={signedUrlData.signedUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(buttonVariants({ variant: "outline" }), "lg:hidden")}
+              >
+                Open PDF
+              </a>
+            </>
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
             <img
