@@ -28,10 +28,24 @@ import { confirmDocumentReviewAction } from "../actions";
 import { DOCUMENT_TYPE_LABELS, CATEGORY_LABELS, type ReviewDefaultValues } from "../defaults";
 import { DueDateSection } from "./due-date-section";
 
-const DOCUMENT_TYPE_VALUES_BY_CATEGORY = {
-  vehicle: VEHICLE_DOCUMENT_TYPE_VALUES,
-  health: HEALTH_DOCUMENT_TYPE_VALUES,
-  bills: BILLS_DOCUMENT_TYPE_VALUES,
+const CATEGORY_ITEMS = DOCUMENT_CATEGORY_VALUES.map((value) => ({
+  value,
+  label: CATEGORY_LABELS[value],
+}));
+
+const DOCUMENT_TYPE_ITEMS_BY_CATEGORY = {
+  vehicle: VEHICLE_DOCUMENT_TYPE_VALUES.map((value) => ({
+    value,
+    label: DOCUMENT_TYPE_LABELS[value],
+  })),
+  health: HEALTH_DOCUMENT_TYPE_VALUES.map((value) => ({
+    value,
+    label: DOCUMENT_TYPE_LABELS[value],
+  })),
+  bills: BILLS_DOCUMENT_TYPE_VALUES.map((value) => ({
+    value,
+    label: DOCUMENT_TYPE_LABELS[value],
+  })),
 } as const;
 
 const nullableText = { setValueAs: (value: string) => (value === "" ? null : value) };
@@ -116,14 +130,18 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="flex flex-col gap-1.5">
         <Label htmlFor="category">Category</Label>
-        <Select value={categoryController.field.value} onValueChange={handleCategoryChange}>
+        <Select
+          items={CATEGORY_ITEMS}
+          value={categoryController.field.value}
+          onValueChange={handleCategoryChange}
+        >
           <SelectTrigger id="category" className="w-full">
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
           <SelectContent>
-            {DOCUMENT_CATEGORY_VALUES.map((value) => (
-              <SelectItem key={value} value={value}>
-                {CATEGORY_LABELS[value]}
+            {CATEGORY_ITEMS.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -135,6 +153,7 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="documentType">Document type</Label>
           <Select
+            items={DOCUMENT_TYPE_ITEMS_BY_CATEGORY[category]}
             value={documentTypeController.field.value}
             onValueChange={documentTypeController.field.onChange}
           >
@@ -142,9 +161,9 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
               <SelectValue placeholder="Select a document type" />
             </SelectTrigger>
             <SelectContent>
-              {DOCUMENT_TYPE_VALUES_BY_CATEGORY[category].map((value) => (
-                <SelectItem key={value} value={value}>
-                  {DOCUMENT_TYPE_LABELS[value]}
+              {DOCUMENT_TYPE_ITEMS_BY_CATEGORY[category].map((item) => (
+                <SelectItem key={item.value} value={item.value}>
+                  {item.label}
                 </SelectItem>
               ))}
             </SelectContent>
