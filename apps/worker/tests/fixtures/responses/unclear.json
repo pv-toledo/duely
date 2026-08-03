@@ -1,0 +1,7 @@
+{
+  "reason": "The document is a movie ticket, which does not fall into the vehicle, health, or bills categories.",
+  "category": "unclear",
+  "due_date": null,
+  "issuer_name": null,
+  "subject_name": null
+}
