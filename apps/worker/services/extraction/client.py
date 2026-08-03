@@ -36,6 +36,27 @@ class ExtractionError(Exception):
     """Raised when the Gemini call fails or returns something that doesn't
     validate against the schema, after the SDK's own retries are exhausted."""
 
+    def __init__(
+        self,
+        message: str,
+        status_code: int | None = None,
+        is_daily_quota_exceeded: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+        self.is_daily_quota_exceeded = is_daily_quota_exceeded
+
+
+def _is_daily_quota_exceeded(error: errors.APIError) -> bool:
+    details = getattr(error, "details", None)
+    if not isinstance(details, dict):
+        return False
+    for entry in details.get("error", {}).get("details", []):
+        if entry.get("@type", "").endswith("QuotaFailure"):
+            violations = entry.get("violations", [])
+            return any("PerDay" in v.get("quotaId", "") for v in violations)
+    return False
+
 
 class GeminiExtractionClient:
     def __init__(self, api_key: str) -> None:
@@ -68,8 +89,20 @@ class GeminiExtractionClient:
                 ),
             )
         except errors.APIError as e:
-            logger.error("Gemini call failed: %s %s", e.code, e.message)
-            raise ExtractionError(f"{e.code}: {e.message}") from e
+            daily_exceeded = _is_daily_quota_exceeded(e)
+            logger.error(
+                "Gemini call failed: %s %s (daily_quota_exceeded=%s)",
+                e.code,
+                e.message,
+                daily_exceeded,
+            )
+            if daily_exceeded:
+                logger.info("daily_quota_error_details: %s", e.details)
+            raise ExtractionError(
+                f"{e.code}: {e.message}",
+                status_code=e.code,
+                is_daily_quota_exceeded=daily_exceeded,
+            ) from e
 
         if response.parsed is None:
             raise ExtractionError("Gemini response didn't match the schema.")

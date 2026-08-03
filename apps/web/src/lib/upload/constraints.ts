@@ -14,7 +14,7 @@ export const MIME_TO_EXTENSION: Record<(typeof ALLOWED_MIME_TYPES)[number], stri
   "application/pdf": "pdf",
 };
 
-export const MIN_IMAGE_DIMENSION_PX = 1000;
+export const MIN_IMAGE_DIMENSION_PX = 200;
 
 export const MAX_RAW_INPUT_SIZE_BYTES = 50 * 1024 * 1024;
 

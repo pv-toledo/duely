@@ -57,6 +57,14 @@ class Extraction(Base):
     processed_at: Mapped[datetime | None]
 
 
+class ExtractionStatus(Base):
+    __tablename__ = "extraction_status"
+
+    key: Mapped[str] = mapped_column(primary_key=True)
+    paused_until: Mapped[datetime | None]
+    updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
+
+
 class Deadline(Base):
     __tablename__ = "deadlines"
 

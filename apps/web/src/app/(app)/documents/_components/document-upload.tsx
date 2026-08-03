@@ -16,7 +16,7 @@ const ERROR_MESSAGES: Record<ClientFailureReason, string> = {
   not_authenticated: "Your session expired. Please sign in again.",
   invalid_type: "This file type isn't supported. Use JPEG, PNG, HEIC, WebP or PDF.",
   file_too_large: "This file is too large. Try a smaller PDF or photo.",
-  image_too_small: "This photo's resolution is too low. Try a clearer, closer photo.",
+  image_too_small: "This doesn't look like a photo of a document. Try a different file.",
   unreadable_image: "We couldn't read this file. Try a different one.",
   upload_failed: "Upload failed. Check your connection and try again.",
   insert_failed: "Something went wrong saving your document. Try again.",
