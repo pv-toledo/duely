@@ -27,6 +27,7 @@ import { documentReviewSchema, type ReviewCategory, type ReviewFormInput } from 
 import { confirmDocumentReviewAction } from "../actions";
 import { DOCUMENT_TYPE_LABELS, CATEGORY_LABELS, type ReviewDefaultValues } from "../defaults";
 import { DueDateSection } from "./due-date-section";
+import { FieldError } from "./field-error";
 
 const CATEGORY_ITEMS = DOCUMENT_CATEGORY_VALUES.map((value) => ({
   value,
@@ -42,16 +43,11 @@ const DOCUMENT_TYPE_ITEMS_BY_CATEGORY = {
     value,
     label: DOCUMENT_TYPE_LABELS[value],
   })),
-  bills: BILLS_DOCUMENT_TYPE_VALUES.map((value) => ({
-    value,
-    label: DOCUMENT_TYPE_LABELS[value],
-  })),
+  bills: BILLS_DOCUMENT_TYPE_VALUES.map((value) => ({ value, label: DOCUMENT_TYPE_LABELS[value] })),
 } as const;
 
 const nullableText = { setValueAs: (value: string) => (value === "" ? null : value) };
-const nullableNumber = {
-  setValueAs: (value: string) => (value === "" ? null : Number(value)),
-};
+const nullableNumber = { setValueAs: (value: string) => (value === "" ? null : Number(value)) };
 
 function toDisplayValue(value: string | null): string {
   return value ?? "";
@@ -92,8 +88,8 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
   });
 
   const categoryController = useController({ control, name: "category" });
-  const category = categoryController.field.value;
   const documentTypeController = useController({ control, name: "documentType" });
+  const category = categoryController.field.value;
 
   function handleCategoryChange(value: ReviewCategory | null) {
     categoryController.field.onChange(value);
@@ -127,14 +123,10 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1.5">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex min-w-0 flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-1.5">
         <Label htmlFor="category">Category</Label>
-        <Select
-          items={CATEGORY_ITEMS}
-          value={categoryController.field.value}
-          onValueChange={handleCategoryChange}
-        >
+        <Select items={CATEGORY_ITEMS} value={category} onValueChange={handleCategoryChange}>
           <SelectTrigger id="category" className="w-full">
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
@@ -146,11 +138,11 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
             ))}
           </SelectContent>
         </Select>
-        {errors.category && <p className="text-xs text-destructive">{errors.category.message}</p>}
+        <FieldError message={errors.category?.message} />
       </div>
 
       {category && (
-        <div className="flex flex-col gap-1.5">
+        <div className="flex min-w-0 flex-col gap-1.5">
           <Label htmlFor="documentType">Document type</Label>
           <Select
             items={DOCUMENT_TYPE_ITEMS_BY_CATEGORY[category]}
@@ -168,60 +160,57 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
               ))}
             </SelectContent>
           </Select>
-          {errors.documentType && (
-            <p className="text-xs text-destructive">{errors.documentType.message}</p>
-          )}
+          <FieldError message={errors.documentType?.message} />
         </div>
       )}
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex min-w-0 flex-col gap-1.5">
         <Label htmlFor="title">Title</Label>
         <Input id="title" {...register("title")} />
-        {errors.title && <p className="text-xs text-destructive">{errors.title.message}</p>}
+        <FieldError message={errors.title?.message} />
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex min-w-0 flex-col gap-1.5">
         <Label htmlFor="subjectName">Subject name</Label>
         <Input id="subjectName" {...register("subjectName", nullableText)} />
-        {errors.subjectName && (
-          <p className="text-xs text-destructive">{errors.subjectName.message}</p>
-        )}
+        <FieldError message={errors.subjectName?.message} />
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex min-w-0 flex-col gap-1.5">
         <Label htmlFor="issuerName">Issuer name</Label>
         <Input id="issuerName" {...register("issuerName", nullableText)} />
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex min-w-0 flex-col gap-1.5">
         <Label>Due date</Label>
         <DueDateSection control={control} />
       </div>
 
       {category === "vehicle" && (
         <>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="documentNumber">Document number</Label>
             <Input id="documentNumber" {...register("documentNumber", nullableText)} />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="plate">Plate</Label>
             <Input id="plate" {...register("plate", nullableText)} />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="amount">Amount (optional)</Label>
             <Input id="amount" type="number" step="0.01" {...register("amount", nullableNumber)} />
+            <FieldError message={errors.amount?.message} />
           </div>
         </>
       )}
 
       {category === "health" && (
         <>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="documentDate">Document date</Label>
             <Input id="documentDate" type="date" {...register("documentDate", nullableText)} />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="description">Description</Label>
             <Input id="description" {...register("description", nullableText)} />
           </div>
@@ -230,23 +219,23 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
 
       {category === "bills" && (
         <>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="documentNumber">Document number</Label>
             <Input id="documentNumber" {...register("documentNumber", nullableText)} />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="referencePeriod">Reference period</Label>
             <Input id="referencePeriod" {...register("referencePeriod", nullableText)} />
           </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="amount">Amount</Label>
             <Input id="amount" type="number" step="0.01" {...register("amount", nullableNumber)} />
-            {errors.amount && <p className="text-xs text-destructive">{errors.amount.message}</p>}
+            <FieldError message={errors.amount?.message} />
           </div>
         </>
       )}
 
-      {submitError && <p className="text-sm text-destructive">{submitError}</p>}
+      <FieldError message={submitError ?? undefined} />
 
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Confirming..." : "Confirm"}

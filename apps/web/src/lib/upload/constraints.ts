@@ -2,6 +2,7 @@ export const ALLOWED_MIME_TYPES = [
   "image/jpeg",
   "image/png",
   "image/heic",
+  "image/heif",
   "image/webp",
   "application/pdf",
 ] as const;
@@ -10,6 +11,7 @@ export const MIME_TO_EXTENSION: Record<(typeof ALLOWED_MIME_TYPES)[number], stri
   "image/jpeg": "jpg",
   "image/png": "png",
   "image/heic": "heic",
+  "image/heif": "heif",
   "image/webp": "webp",
   "application/pdf": "pdf",
 };

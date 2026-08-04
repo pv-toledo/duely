@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { FieldError } from "./field-error";
 
 function dateToISOString(date: Date): string {
   const year = date.getFullYear();
@@ -67,7 +68,7 @@ export function DueDatePicker({ value, onChange, disabled = false, error }: DueD
           />
         </PopoverContent>
       </Popover>
-      {error && <p className="text-xs text-destructive">{error}</p>}
+      <FieldError message={error} />
     </div>
   );
 }

@@ -43,8 +43,8 @@ export default async function DocumentReviewPage({ params }: { params: Promise<{
   const defaultValues = buildDefaultReviewValues(document, extraction.raw_response);
 
   return (
-    <div className="flex w-full flex-col gap-8 lg:flex-row">
-      <div className="lg:w-1/2">
+    <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-row">
+      <div className="min-w-0 lg:w-1/2">
         {signedUrlData?.signedUrl ? (
           document.mime_type === "application/pdf" ? (
             <>
@@ -75,7 +75,7 @@ export default async function DocumentReviewPage({ params }: { params: Promise<{
           <p className="text-sm text-muted-foreground">Couldn&apos;t load the document image.</p>
         )}
       </div>
-      <div className="flex flex-col gap-4 lg:w-1/2">
+      <div className="flex min-w-0 flex-col gap-4 lg:w-1/2">
         <ReviewForm documentId={document.id} defaultValues={defaultValues} />
       </div>
     </div>
