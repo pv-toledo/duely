@@ -8,7 +8,7 @@ import {
 const optionalText = () => z.string().trim().nullable();
 
 const baseFields = {
-  title: z.string().trim().min(1, "Title is required"),
+  title: z.string().trim().nullable(),
   subjectName: optionalText(),
   issuerName: optionalText(),
   dueDate: z.string().nullable(),
@@ -18,7 +18,7 @@ const baseFields = {
 const vehicleSchema = z.object({
   ...baseFields,
   category: z.literal("vehicle"),
-  documentType: z.enum(VEHICLE_DOCUMENT_TYPE_VALUES, { error: "Document type is required" }),
+  documentType: z.enum(VEHICLE_DOCUMENT_TYPE_VALUES).nullable(),
   documentNumber: optionalText(),
   plate: optionalText(),
   amount: z.number().nullable(),
@@ -27,7 +27,7 @@ const vehicleSchema = z.object({
 const healthSchema = z.object({
   ...baseFields,
   category: z.literal("health"),
-  documentType: z.enum(HEALTH_DOCUMENT_TYPE_VALUES, { error: "Document type is required" }),
+  documentType: z.enum(HEALTH_DOCUMENT_TYPE_VALUES).nullable(),
   documentDate: z.string().nullable(),
   description: optionalText(),
 });
@@ -35,10 +35,11 @@ const healthSchema = z.object({
 const billsSchema = z.object({
   ...baseFields,
   category: z.literal("bills"),
-  documentType: z.enum(BILLS_DOCUMENT_TYPE_VALUES, { error: "Document type is required" }),
+  documentType: z.enum(BILLS_DOCUMENT_TYPE_VALUES).nullable(),
   documentNumber: optionalText(),
   referencePeriod: optionalText(),
-  amount: z.number({ error: "Amount is required" }),
+  description: optionalText(),
+  amount: z.number().nullable(),
 });
 
 export const documentReviewSchema = z
@@ -46,6 +47,16 @@ export const documentReviewSchema = z
     error: "Category is required",
   })
   .superRefine((data, ctx) => {
+    if (!data.title) {
+      ctx.addIssue({ code: "custom", path: ["title"], message: "Title is required" });
+    }
+    if (!data.documentType) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["documentType"],
+        message: "Document type is required",
+      });
+    }
     if (!data.hasNoDueDate && data.dueDate === null) {
       ctx.addIssue({ code: "custom", path: ["dueDate"], message: "Due date is required" });
     }
@@ -55,6 +66,18 @@ export const documentReviewSchema = z
         path: ["subjectName"],
         message: "Subject name is required",
       });
+    }
+    if (data.category === "bills") {
+      if (data.amount === null) {
+        ctx.addIssue({ code: "custom", path: ["amount"], message: "Amount is required" });
+      }
+      if (data.documentType === "other" && !data.description) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["description"],
+          message: "Description is required",
+        });
+      }
     }
   });
 
@@ -75,5 +98,3 @@ export type ReviewFormInput = {
   description: string;
   referencePeriod: string;
 };
-
-export type DocumentReviewValues = z.infer<typeof documentReviewSchema>;

@@ -31,6 +31,7 @@ export const BILLS_DOCUMENT_TYPE_VALUES = [
   "condo_fee",
   "internet",
   "credit_card_invoice",
+  "other"
 ] as const;
 export type BillsDocumentType = (typeof BILLS_DOCUMENT_TYPE_VALUES)[number];
 

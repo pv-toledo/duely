@@ -227,6 +227,13 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
             <Label htmlFor="referencePeriod">Reference period</Label>
             <Input id="referencePeriod" {...register("referencePeriod", nullableText)} />
           </div>
+          {documentTypeController.field.value === "other" && (
+            <div className="flex min-w-0 flex-col gap-1.5">
+              <Label htmlFor="description">Description</Label>
+              <Input id="description" {...register("description", nullableText)} />
+              <FieldError message={errors.description?.message} />
+            </div>
+          )}
           <div className="flex min-w-0 flex-col gap-1.5">
             <Label htmlFor="amount">Amount</Label>
             <Input id="amount" type="number" step="0.01" {...register("amount", nullableNumber)} />

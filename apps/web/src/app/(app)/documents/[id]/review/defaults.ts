@@ -101,6 +101,7 @@ export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
   condo_fee: "Condo Fee",
   internet: "Internet Bill",
   credit_card_invoice: "Credit Card Invoice",
+  other: "Other",
 };
 
 export const CATEGORY_LABELS: Record<"vehicle" | "health" | "bills", string> = {

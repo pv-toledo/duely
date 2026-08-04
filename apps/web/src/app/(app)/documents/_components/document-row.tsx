@@ -21,6 +21,13 @@ import { deleteDocumentAction } from "../actions";
 import { DocumentStatusBadge } from "./document-status-badge";
 import Link from "next/link";
 
+function getDocumentHref(id: string, status: DocumentStatus): string | null {
+  if (status === "needs_review") {
+    return `/documents/${id}/review`;
+  }
+  return null;
+}
+
 export function DocumentRow({
   id,
   originalFilename,
@@ -36,6 +43,8 @@ export function DocumentRow({
 }) {
   const [isPending, startTransition] = useTransition();
 
+  const href = getDocumentHref(id, status);
+
   function handleDelete() {
     startTransition(async () => {
       const result = await deleteDocumentAction(id);
@@ -47,21 +56,33 @@ export function DocumentRow({
 
   return (
     <div className="flex items-center justify-between gap-4 rounded-lg border border-border p-4">
-      <span className="min-w-0 flex-1 truncate text-sm font-medium" title={originalFilename}>
-        {truncateFilename(originalFilename)}
-      </span>
+      {href ? (
+        <Link
+          href={href}
+          className="min-w-0 flex-1 truncate text-sm font-medium hover:underline"
+          title={originalFilename}
+        >
+          {truncateFilename(originalFilename)}
+        </Link>
+      ) : (
+        <span className="min-w-0 flex-1 truncate text-sm font-medium" title={originalFilename}>
+          {truncateFilename(originalFilename)}
+        </span>
+      )}
       <div className="flex shrink-0 items-center gap-3">
         <span className="text-xs text-muted-foreground tabular-nums">
           {new Date(createdAt).toLocaleDateString("en-US")}
         </span>
-        <DocumentStatusBadge status={status} />
-        {status === "needs_review" && (
+        {href ? (
           <Link
-            href={`/documents/${id}/review`}
-            className={cn(buttonVariants({ variant: "outline" }))}
+            href={href}
+            aria-label={`Review ${originalFilename}`}
+            className="transition-opacity hover:opacity-80"
           >
-            Review
+            <DocumentStatusBadge status={status} />
           </Link>
+        ) : (
+          <DocumentStatusBadge status={status} />
         )}
         <AlertDialog>
           <AlertDialogTrigger
