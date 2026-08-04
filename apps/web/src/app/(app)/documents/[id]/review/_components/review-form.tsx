@@ -28,6 +28,7 @@ import { confirmDocumentReviewAction } from "../actions";
 import { DOCUMENT_TYPE_LABELS, CATEGORY_LABELS, type ReviewDefaultValues } from "../defaults";
 import { DueDateSection } from "./due-date-section";
 import { FieldError } from "./field-error";
+import { FieldLabel } from "./field-label";
 
 const CATEGORY_ITEMS = DOCUMENT_CATEGORY_VALUES.map((value) => ({
   value,
@@ -124,6 +125,7 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex min-w-0 flex-col gap-6">
+      <p className="text-xs text-muted-foreground">Fields marked (optional) can be left blank.</p>
       <div className="flex min-w-0 flex-col gap-1.5">
         <Label htmlFor="category">Category</Label>
         <Select items={CATEGORY_ITEMS} value={category} onValueChange={handleCategoryChange}>
@@ -171,13 +173,17 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       </div>
 
       <div className="flex min-w-0 flex-col gap-1.5">
-        <Label htmlFor="subjectName">Subject name</Label>
+        <FieldLabel htmlFor="subjectName" optional={category !== "health"}>
+          Subject name
+        </FieldLabel>
         <Input id="subjectName" {...register("subjectName", nullableText)} />
         <FieldError message={errors.subjectName?.message} />
       </div>
 
       <div className="flex min-w-0 flex-col gap-1.5">
-        <Label htmlFor="issuerName">Issuer name</Label>
+        <FieldLabel htmlFor="issuerName" optional>
+          Issuer name
+        </FieldLabel>
         <Input id="issuerName" {...register("issuerName", nullableText)} />
       </div>
 
@@ -189,15 +195,21 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       {category === "vehicle" && (
         <>
           <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor="documentNumber">Document number</Label>
+            <FieldLabel htmlFor="documentNumber" optional>
+              Document number
+            </FieldLabel>
             <Input id="documentNumber" {...register("documentNumber", nullableText)} />
           </div>
           <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor="plate">Plate</Label>
+            <FieldLabel htmlFor="plate" optional>
+              Plate
+            </FieldLabel>
             <Input id="plate" {...register("plate", nullableText)} />
           </div>
           <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor="amount">Amount (optional)</Label>
+            <FieldLabel htmlFor="amount" optional>
+              Amount
+            </FieldLabel>
             <Input id="amount" type="number" step="0.01" {...register("amount", nullableNumber)} />
             <FieldError message={errors.amount?.message} />
           </div>
@@ -207,11 +219,15 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       {category === "health" && (
         <>
           <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor="documentDate">Document date</Label>
+            <FieldLabel htmlFor="documentDate" optional>
+              Document date
+            </FieldLabel>
             <Input id="documentDate" type="date" {...register("documentDate", nullableText)} />
           </div>
           <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor="description">Description</Label>
+            <FieldLabel htmlFor="description" optional>
+              Description
+            </FieldLabel>
             <Input id="description" {...register("description", nullableText)} />
           </div>
         </>
@@ -220,16 +236,25 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       {category === "bills" && (
         <>
           <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor="documentNumber">Document number</Label>
+            <FieldLabel htmlFor="documentNumber" optional>
+              Document number
+            </FieldLabel>
             <Input id="documentNumber" {...register("documentNumber", nullableText)} />
           </div>
           <div className="flex min-w-0 flex-col gap-1.5">
-            <Label htmlFor="referencePeriod">Reference period</Label>
+            <FieldLabel htmlFor="referencePeriod" optional>
+              Reference period
+            </FieldLabel>
             <Input id="referencePeriod" {...register("referencePeriod", nullableText)} />
           </div>
           {documentTypeController.field.value === "other" && (
             <div className="flex min-w-0 flex-col gap-1.5">
-              <Label htmlFor="description">Description</Label>
+              <FieldLabel
+                htmlFor="description"
+                optional={documentTypeController.field.value !== "other"}
+              >
+                Description
+              </FieldLabel>
               <Input id="description" {...register("description", nullableText)} />
               <FieldError message={errors.description?.message} />
             </div>
