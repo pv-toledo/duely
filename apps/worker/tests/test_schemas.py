@@ -49,6 +49,7 @@ def test_bills_extraction_preserves_decimal_precision():
     result = _extraction_fields_adapter.validate_python(_load("bills.json"))
     assert result.amount == Decimal("187.42")
     assert result.reference_period == "07/2026"
+    assert result.language == "pt"
 
 
 def test_unclear_extraction_has_no_category_fields():

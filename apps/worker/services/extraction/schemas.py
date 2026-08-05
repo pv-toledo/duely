@@ -18,6 +18,13 @@ class ExtractionFieldsBase(BaseModel):
     subject_name: str | None = None
     issuer_name: str | None = None
     due_date: date | None = None
+    language: Literal["pt", "en"] | None = Field(
+        default=None,
+        description=(
+            "Primary language the document is written in. "
+            "Null if genuinely illegible or mixed with no clear majority."
+        ),
+    )
 
 
 class VehicleFields(ExtractionFieldsBase):

@@ -43,6 +43,7 @@ async def save_extraction_result(
     document_values: dict[str, str | None] = {
         "subject_name": fields.subject_name,
         "issuer_name": fields.issuer_name,
+        "search_language": fields.language,
         "status": "needs_review",
     }
     if fields.category != "unclear":
