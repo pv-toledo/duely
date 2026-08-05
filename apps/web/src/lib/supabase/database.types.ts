@@ -87,8 +87,6 @@ export type Database = {
           mime_type: string;
           original_filename: string;
           search_language: string | null;
-          search_vector: unknown;
-          searchable_text: string | null;
           status: string;
           storage_path: string;
           subject_name: string | null;
@@ -104,8 +102,6 @@ export type Database = {
           mime_type: string;
           original_filename: string;
           search_language?: string | null;
-          search_vector?: unknown;
-          searchable_text?: string | null;
           status?: string;
           storage_path: string;
           subject_name?: string | null;
@@ -121,8 +117,6 @@ export type Database = {
           mime_type?: string;
           original_filename?: string;
           search_language?: string | null;
-          search_vector?: unknown;
-          searchable_text?: string | null;
           status?: string;
           storage_path?: string;
           subject_name?: string | null;
