@@ -1,10 +1,9 @@
-# apps/worker/db/models.py
 from datetime import date, datetime
 from decimal import Decimal
 from uuid import UUID as PyUUID
 
 from sqlalchemy import ForeignKey, Numeric, UniqueConstraint, text
-from sqlalchemy.dialects.postgresql import JSONB, TSVECTOR
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from db.base import Base
@@ -33,9 +32,7 @@ class Document(Base):
     subject_name: Mapped[str | None]
     issuer_name: Mapped[str | None]
     title: Mapped[str | None]
-    searchable_text: Mapped[str | None]
     search_language: Mapped[str | None]
-    search_vector: Mapped[str | None] = mapped_column(TSVECTOR)
     created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
 
 
