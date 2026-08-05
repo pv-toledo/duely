@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { DOCUMENT_CATEGORY_VALUES } from "@duely/shared";
+import { DOCUMENT_TYPE_LABELS } from "../../labels";
 
 const categorySchema = z.enum(DOCUMENT_CATEGORY_VALUES).nullable().catch(null);
 
@@ -87,28 +88,6 @@ function extractResidualFields(rawResponse: unknown): ResidualFields {
       return emptyResidualFields;
   }
 }
-
-export const DOCUMENT_TYPE_LABELS: Record<string, string> = {
-  drivers_license: "Driver's License",
-  vehicle_registration: "Vehicle Registration",
-  insurance: "Insurance",
-  exam_result: "Exam Result",
-  prescription: "Prescription",
-  vaccination_record: "Vaccination Record",
-  utility_water: "Water Bill",
-  utility_electricity: "Electricity Bill",
-  utility_gas: "Gas Bill",
-  condo_fee: "Condo Fee",
-  internet: "Internet Bill",
-  credit_card_invoice: "Credit Card Invoice",
-  other: "Other",
-};
-
-export const CATEGORY_LABELS: Record<"vehicle" | "health" | "bills", string> = {
-  vehicle: "Vehicle",
-  health: "Health",
-  bills: "Bills",
-};
 
 function generateDefaultTitle(params: {
   documentType: string | null;

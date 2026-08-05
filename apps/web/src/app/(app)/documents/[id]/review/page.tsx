@@ -3,8 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { buildDefaultReviewValues } from "./defaults";
 import { ReviewForm } from "./_components/review-form";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { DocumentPreview } from "../_components/document-preview";
 
 export default async function DocumentReviewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -45,35 +44,11 @@ export default async function DocumentReviewPage({ params }: { params: Promise<{
   return (
     <div className="flex w-full min-w-0 flex-col gap-8 lg:flex-row">
       <div className="min-w-0 lg:w-1/2">
-        {signedUrlData?.signedUrl ? (
-          document.mime_type === "application/pdf" ? (
-            <>
-              <iframe
-                src={signedUrlData.signedUrl}
-                title={document.original_filename}
-                className="hidden h-[75vh] w-full rounded-lg border border-border lg:block"
-              />
-
-              <a
-                href={signedUrlData.signedUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(buttonVariants({ variant: "outline" }), "lg:hidden")}
-              >
-                Open PDF
-              </a>
-            </>
-          ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={signedUrlData.signedUrl}
-              alt={document.original_filename}
-              className="w-full rounded-lg border border-border"
-            />
-          )
-        ) : (
-          <p className="text-sm text-muted-foreground">Couldn&apos;t load the document image.</p>
-        )}
+        <DocumentPreview
+          mimeType={document.mime_type}
+          originalFilename={document.original_filename}
+          signedUrl={signedUrlData?.signedUrl ?? null}
+        />
       </div>
       <div className="flex min-w-0 flex-col gap-4 lg:w-1/2">
         <ReviewForm documentId={document.id} defaultValues={defaultValues} />

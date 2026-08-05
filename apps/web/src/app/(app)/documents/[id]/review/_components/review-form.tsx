@@ -25,10 +25,12 @@ import {
 
 import { documentReviewSchema, type ReviewCategory, type ReviewFormInput } from "../schema";
 import { confirmDocumentReviewAction } from "../actions";
-import { DOCUMENT_TYPE_LABELS, CATEGORY_LABELS, type ReviewDefaultValues } from "../defaults";
+
 import { DueDateSection } from "./due-date-section";
 import { FieldError } from "./field-error";
 import { FieldLabel } from "./field-label";
+import { CATEGORY_LABELS, DOCUMENT_TYPE_LABELS } from "../../../labels";
+import { ReviewDefaultValues } from "../defaults";
 
 const CATEGORY_ITEMS = DOCUMENT_CATEGORY_VALUES.map((value) => ({
   value,

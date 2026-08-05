@@ -40,3 +40,6 @@ export type DeadlineRecurrence = (typeof DEADLINE_RECURRENCE_VALUES)[number];
 
 export const DEADLINE_STATUS_VALUES = ["active", "done", "dismissed"] as const;
 export type DeadlineStatus = (typeof DEADLINE_STATUS_VALUES)[number];
+
+export const DOCUMENT_LANGUAGE_VALUES = ["pt", "en"] as const;
+export type DocumentLanguage = (typeof DOCUMENT_LANGUAGE_VALUES)[number];
