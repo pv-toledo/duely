@@ -3,8 +3,8 @@
 import { useController, type Control } from "react-hook-form";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { DueDatePicker } from "./due-date-picker";
 import type { ReviewFormInput } from "../schema";
+import { DueDatePicker } from "@/app/(app)/_components/due-date-picker";
 
 type DueDateSectionProps = {
   control: Control<ReviewFormInput>;

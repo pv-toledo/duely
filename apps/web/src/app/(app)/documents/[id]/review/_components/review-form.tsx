@@ -27,10 +27,12 @@ import { documentReviewSchema, type ReviewCategory, type ReviewFormInput } from 
 import { confirmDocumentReviewAction } from "../actions";
 
 import { DueDateSection } from "./due-date-section";
-import { FieldError } from "./field-error";
-import { FieldLabel } from "./field-label";
+
 import { CATEGORY_LABELS, DOCUMENT_TYPE_LABELS } from "../../../labels";
 import { ReviewDefaultValues } from "../defaults";
+import { FieldError } from "@/app/(app)/_components/field-error";
+import { nullableNumber } from "@/app/(app)/form-helpers";
+import { FieldLabel } from "@/app/(app)/_components/field-label";
 
 const CATEGORY_ITEMS = DOCUMENT_CATEGORY_VALUES.map((value) => ({
   value,
@@ -50,7 +52,6 @@ const DOCUMENT_TYPE_ITEMS_BY_CATEGORY = {
 } as const;
 
 const nullableText = { setValueAs: (value: string) => (value === "" ? null : value) };
-const nullableNumber = { setValueAs: (value: string) => (value === "" ? null : Number(value)) };
 
 function toDisplayValue(value: string | null): string {
   return value ?? "";

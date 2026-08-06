@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText } from "lucide-react";
+import { FileText, LayoutDashboard } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,7 +17,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const NAV_ITEMS = [{ title: "Documents", url: "/documents", icon: FileText }];
+const NAV_ITEMS = [
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Documents", url: "/documents", icon: FileText },
+];
 
 export function AppSidebar() {
   const pathname = usePathname();

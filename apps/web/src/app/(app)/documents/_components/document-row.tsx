@@ -18,23 +18,10 @@ import { cn } from "@/lib/utils";
 import { truncateFilename } from "@/lib/format-filename";
 import type { DocumentCategory, DocumentLanguage, DocumentStatus } from "@duely/shared";
 import { deleteDocumentAction } from "../actions";
-import { DocumentStatusBadge } from "./document-status-badge";
 import { CATEGORY_LABELS, DOCUMENT_TYPE_LABELS } from "../labels";
 import Link from "next/link";
-
-function getDocumentHref(id: string, status: DocumentStatus): string | null {
-  if (status === "needs_review") {
-    return `/documents/${id}/review`;
-  }
-  if (status === "archived") {
-    return `/documents/${id}`;
-  }
-  return null;
-}
-
-function getDocumentAriaLabel(status: DocumentStatus, originalFilename: string): string {
-  return status === "needs_review" ? `Review ${originalFilename}` : `View ${originalFilename}`;
-}
+import { DocumentStatusBadge } from "../../_components/document-status-badge";
+import { getDocumentAriaLabel, getDocumentHref } from "../../document-links";
 
 function buildClassificationLabel(
   category: DocumentCategory | null,

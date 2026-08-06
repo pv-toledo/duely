@@ -10,6 +10,7 @@ import {
   isDocumentLanguage,
 } from "../labels";
 import type { DocumentLanguage } from "@duely/shared";
+import { formatAmount } from "../../fomat-amount";
 
 function FieldRow({ label, value }: { label: string; value: string | null }) {
   return (
@@ -24,17 +25,6 @@ function FieldRow({ label, value }: { label: string; value: string | null }) {
 
 function formatDate(value: string | null): string | null {
   return value ? new Date(value).toLocaleDateString("en-US") : null;
-}
-
-function formatAmount(value: number | null, language: DocumentLanguage | null): string | null {
-  if (value === null) {
-    return null;
-  }
-  // Currency is inferred from document language, not extracted from the
-  // document itself -- a deliberate simplification (see docs/ideas.md).
-  // Defaults to BRL when language is unknown, matching the app's primary use case.
-  const currency = language === "en" ? "USD" : "BRL";
-  return value.toLocaleString("en-US", { style: "currency", currency });
 }
 
 export default async function DocumentDetailPage({ params }: { params: Promise<{ id: string }> }) {
