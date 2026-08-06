@@ -81,3 +81,33 @@ export async function createManualDeadlineAction(input: {
   revalidatePath("/deadlines");
   return { success: true };
 }
+
+export async function updateManualDeadlineAction(
+  deadlineId: string,
+  input: {
+    title: string;
+    dueDate: string;
+    amount: number | null;
+    recurrence: "none" | "monthly" | "yearly";
+  }
+): Promise<{ success: boolean }> {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("deadlines")
+    .update({
+      title: input.title,
+      due_date: input.dueDate,
+      amount: input.amount,
+      recurrence: input.recurrence,
+    })
+    .eq("id", deadlineId);
+
+  if (error) {
+    return { success: false };
+  }
+
+  revalidatePath("/dashboard");
+  revalidatePath("/deadlines");
+  return { success: true };
+}

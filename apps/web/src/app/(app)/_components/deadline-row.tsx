@@ -30,6 +30,8 @@ import type { DocumentLanguage } from "@duely/shared";
 import { isRecurringInterval, addInterval } from "../recurrence";
 import { updateDeadlineStatusAction } from "../deadline-actions";
 import { formatAmount } from "../format-amount";
+import { EditDeadlineDialog } from "./edit-deadline-dialog";
+import Link from "next/link";
 
 export type DashboardDeadline = {
   id: string;
@@ -37,6 +39,7 @@ export type DashboardDeadline = {
   due_date: string;
   amount: number | null;
   recurrence: string;
+  document_id: string | null;
   documents: { search_language: DocumentLanguage | null } | null;
 };
 
@@ -85,7 +88,17 @@ export function DeadlineRow({
   return (
     <div className="flex items-center justify-between gap-4 rounded-lg border border-border p-4">
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="truncate text-sm font-medium">{deadline.title}</span>
+        {deadline.document_id ? (
+          <Link
+            href={`/documents/${deadline.document_id}`}
+            className="min-w-0 truncate text-sm font-medium hover:underline"
+            aria-label={`View document for ${deadline.title}`}
+          >
+            {deadline.title}
+          </Link>
+        ) : (
+          <span className="truncate text-sm font-medium">{deadline.title}</span>
+        )}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
           <span className="tabular-nums">{formatDate(deadline.due_date)}</span>
           {amountLabel && (
@@ -106,6 +119,15 @@ export function DeadlineRow({
       </div>
 
       <div className="flex shrink-0 items-center gap-3">
+        {deadline.document_id === null && (
+          <EditDeadlineDialog
+            deadlineId={deadline.id}
+            title={deadline.title}
+            dueDate={deadline.due_date}
+            amount={deadline.amount}
+            recurrence={deadline.recurrence as "none" | "monthly" | "yearly"}
+          />
+        )}
         <Dialog open={doneDialogOpen} onOpenChange={setDoneDialogOpen}>
           <DialogTrigger
             disabled={isPending}

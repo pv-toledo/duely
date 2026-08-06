@@ -2,20 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm, useController, type Resolver } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Dialog,
   DialogClose,
@@ -27,18 +18,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { DueDatePicker } from "./due-date-picker";
+import { DeadlineFormFields } from "./deadline-form-fields";
 import { FieldError } from "./field-error";
-import { FieldLabel } from "./field-label";
-import { nullableNumber } from "../form-helpers";
 import { manualDeadlineSchema, type ManualDeadlineFormInput } from "../deadline-schema";
 import { createManualDeadlineAction } from "../deadline-actions";
-
-const RECURRENCE_ITEMS = [
-  { value: "none", label: "One-time" },
-  { value: "monthly", label: "Monthly" },
-  { value: "yearly", label: "Yearly" },
-] as const;
 
 export function CreateDeadlineDialog() {
   const router = useRouter();
@@ -60,9 +43,6 @@ export function CreateDeadlineDialog() {
       recurrence: "none",
     },
   });
-
-  const dueDateController = useController({ control, name: "dueDate" });
-  const recurrenceController = useController({ control, name: "recurrence" });
 
   async function onSubmit(values: ManualDeadlineFormInput) {
     setSubmitError(null);
@@ -103,53 +83,7 @@ export function CreateDeadlineDialog() {
           </DialogHeader>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" {...register("title")} />
-              <FieldError message={errors.title?.message} />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <Label>Due date</Label>
-              <DueDatePicker
-                value={dueDateController.field.value}
-                onChange={dueDateController.field.onChange}
-                error={dueDateController.fieldState.error?.message}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <FieldLabel htmlFor="amount" optional>
-                Amount
-              </FieldLabel>
-              <Input
-                id="amount"
-                type="number"
-                step="0.01"
-                {...register("amount", nullableNumber)}
-              />
-              <FieldError message={errors.amount?.message} />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="recurrence">Recurrence</Label>
-              <Select
-                items={RECURRENCE_ITEMS}
-                value={recurrenceController.field.value}
-                onValueChange={recurrenceController.field.onChange}
-              >
-                <SelectTrigger id="recurrence" className="w-full">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {RECURRENCE_ITEMS.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <DeadlineFormFields control={control} register={register} errors={errors} />
 
             <FieldError message={submitError ?? undefined} />
 

@@ -23,7 +23,7 @@ export default async function DashboardPage() {
     await Promise.all([
       supabase
         .from("deadlines")
-        .select("id, title, due_date, amount, recurrence, documents(search_language)")
+        .select("id, title, due_date, amount, recurrence, document_id, documents(search_language)")
         .eq("status", "active")
         .lte("due_date", in30DaysStr)
         .order("due_date", { ascending: true }),
@@ -47,6 +47,7 @@ export default async function DashboardPage() {
       due_date: row.due_date,
       amount: row.amount,
       recurrence: row.recurrence,
+      document_id: row.document_id,
       documents: {
         search_language: rawLanguage && isDocumentLanguage(rawLanguage) ? rawLanguage : null,
       },

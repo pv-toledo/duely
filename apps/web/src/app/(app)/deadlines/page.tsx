@@ -19,7 +19,7 @@ export default async function DeadlinesPage() {
   const { data } = await supabase
     .from("deadlines")
     .select(
-      "id, title, due_date, amount, recurrence, status, updated_at, documents(search_language)"
+      "id, title, due_date, amount, recurrence, status, updated_at, document_id, documents(search_language)"
     )
     .order("due_date", { ascending: true });
 
