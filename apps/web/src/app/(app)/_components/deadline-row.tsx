@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, X } from "lucide-react";
+import { Check, FileText, X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -119,7 +119,7 @@ export function DeadlineRow({
       </div>
 
       <div className="flex shrink-0 items-center gap-3">
-        {deadline.document_id === null && (
+        {deadline.document_id === null ? (
           <EditDeadlineDialog
             deadlineId={deadline.id}
             title={deadline.title}
@@ -127,6 +127,15 @@ export function DeadlineRow({
             amount={deadline.amount}
             recurrence={deadline.recurrence as "none" | "monthly" | "yearly"}
           />
+        ) : (
+          <Link
+            href={`/documents/${deadline.document_id}`}
+            aria-label="View source document"
+            title="From a scanned document — edit it there"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <FileText className="size-4" />
+          </Link>
         )}
         <Dialog open={doneDialogOpen} onOpenChange={setDoneDialogOpen}>
           <DialogTrigger
