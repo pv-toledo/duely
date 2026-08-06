@@ -45,6 +45,7 @@ export async function updateDeadlineStatusAction(
   }
 
   revalidatePath("/dashboard");
+  revalidatePath("/deadlines");
   return { success: true };
 }
 
@@ -77,5 +78,6 @@ export async function createManualDeadlineAction(input: {
   }
 
   revalidatePath("/dashboard");
+  revalidatePath("/deadlines");
   return { success: true };
 }

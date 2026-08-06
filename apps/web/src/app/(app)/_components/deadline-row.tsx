@@ -28,8 +28,8 @@ import { cn } from "@/lib/utils";
 import type { DocumentLanguage } from "@duely/shared";
 
 import { isRecurringInterval, addInterval } from "../recurrence";
-import { updateDeadlineStatusAction } from "../actions";
-import { formatAmount } from "../../fomat-amount";
+import { updateDeadlineStatusAction } from "../deadline-actions";
+import { formatAmount } from "../format-amount";
 
 export type DashboardDeadline = {
   id: string;

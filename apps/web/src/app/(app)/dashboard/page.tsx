@@ -1,9 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { isDocumentLanguage } from "../documents/labels";
 import { DashboardStats } from "./_components/dashboard-stats";
-import { DeadlineRow, type DashboardDeadline } from "./_components/deadline-row";
+import { DeadlineRow, type DashboardDeadline } from "../_components/deadline-row";
 import { RecentDocuments, type RecentDocument } from "./_components/recent-documents";
-import { CreateDeadlineDialog } from "./_components/create-deadline-dialog";
+import { CreateDeadlineDialog } from "../_components/create-deadline-dialog";
 
 function toDateString(date: Date): string {
   const year = date.getFullYear();

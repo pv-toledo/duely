@@ -10,7 +10,7 @@ import {
   isDocumentLanguage,
 } from "../labels";
 import type { DocumentLanguage } from "@duely/shared";
-import { formatAmount } from "../../fomat-amount";
+import { formatAmount } from "../../format-amount";
 
 function FieldRow({ label, value }: { label: string; value: string | null }) {
   return (

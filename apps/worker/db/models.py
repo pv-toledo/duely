@@ -80,6 +80,7 @@ class Deadline(Base):
         pg_text_enum(DeadlineStatus), server_default="active"
     )  # noqa: E501
     created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
+    updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
 
 
 class NotificationLog(Base):

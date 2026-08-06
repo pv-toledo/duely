@@ -27,12 +27,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { DueDatePicker } from "../../_components/due-date-picker";
-import { FieldError } from "../../_components/field-error";
-import { FieldLabel } from "../../_components/field-label";
-import { nullableNumber } from "../../form-helpers";
-import { manualDeadlineSchema, type ManualDeadlineFormInput } from "../schema";
-import { createManualDeadlineAction } from "../actions";
+import { DueDatePicker } from "./due-date-picker";
+import { FieldError } from "./field-error";
+import { FieldLabel } from "./field-label";
+import { nullableNumber } from "../form-helpers";
+import { manualDeadlineSchema, type ManualDeadlineFormInput } from "../deadline-schema";
+import { createManualDeadlineAction } from "../deadline-actions";
 
 const RECURRENCE_ITEMS = [
   { value: "none", label: "One-time" },
