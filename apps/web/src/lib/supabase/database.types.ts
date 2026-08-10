@@ -41,6 +41,7 @@ export type Database = {
           due_date: string;
           id: string;
           recurrence: string;
+          reminder_offset_days: number | null;
           status: string;
           title: string;
           updated_at: string;
@@ -53,6 +54,7 @@ export type Database = {
           due_date: string;
           id?: string;
           recurrence?: string;
+          reminder_offset_days?: number | null;
           status?: string;
           title: string;
           updated_at?: string;
@@ -65,6 +67,7 @@ export type Database = {
           due_date?: string;
           id?: string;
           recurrence?: string;
+          reminder_offset_days?: number | null;
           status?: string;
           title?: string;
           updated_at?: string;
@@ -254,24 +257,44 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      confirm_document_review: {
-        Args: {
-          p_amount?: number;
-          p_category?: string;
-          p_description?: string;
-          p_document_date?: string;
-          p_document_id: string;
-          p_document_number?: string;
-          p_document_type?: string;
-          p_due_date?: string;
-          p_issuer_name?: string;
-          p_plate?: string;
-          p_reference_period?: string;
-          p_subject_name?: string;
-          p_title?: string;
-        };
-        Returns: undefined;
-      };
+      confirm_document_review:
+        | {
+            Args: {
+              p_amount?: number;
+              p_category?: string;
+              p_description?: string;
+              p_document_date?: string;
+              p_document_id: string;
+              p_document_number?: string;
+              p_document_type?: string;
+              p_due_date?: string;
+              p_issuer_name?: string;
+              p_plate?: string;
+              p_reference_period?: string;
+              p_subject_name?: string;
+              p_title?: string;
+            };
+            Returns: undefined;
+          }
+        | {
+            Args: {
+              p_amount?: number;
+              p_category?: string;
+              p_description?: string;
+              p_document_date?: string;
+              p_document_id: string;
+              p_document_number?: string;
+              p_document_type?: string;
+              p_due_date?: string;
+              p_issuer_name?: string;
+              p_plate?: string;
+              p_reference_period?: string;
+              p_reminder_offset_days?: number;
+              p_subject_name?: string;
+              p_title?: string;
+            };
+            Returns: undefined;
+          };
     };
     Enums: {
       [_ in never]: never;

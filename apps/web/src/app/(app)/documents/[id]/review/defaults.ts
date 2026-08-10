@@ -115,6 +115,7 @@ export type ReviewDefaultValues = {
   documentDate: string | null;
   description: string | null;
   referencePeriod: string | null;
+  reminderOffsetDays: number | null;
 };
 
 export function buildDefaultReviewValues(
@@ -147,5 +148,6 @@ export function buildDefaultReviewValues(
     documentDate: residual.documentDate,
     description: residual.description,
     referencePeriod: residual.referencePeriod,
+    reminderOffsetDays: 3,
   };
 }

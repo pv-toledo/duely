@@ -88,6 +88,8 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       documentDate: toDisplayValue(defaultValues.documentDate),
       description: toDisplayValue(defaultValues.description),
       referencePeriod: toDisplayValue(defaultValues.referencePeriod),
+      reminderOffsetDays:
+        defaultValues.reminderOffsetDays !== null ? String(defaultValues.reminderOffsetDays) : "",
     },
   });
 
@@ -116,6 +118,8 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       documentDate: values.documentDate === "" ? null : values.documentDate,
       description: values.description === "" ? null : values.description,
       referencePeriod: values.referencePeriod === "" ? null : values.referencePeriod,
+      reminderOffsetDays:
+        values.reminderOffsetDays === "" ? null : Number(values.reminderOffsetDays),
     });
 
     if (!result.success) {
@@ -193,6 +197,19 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       <div className="flex min-w-0 flex-col gap-1.5">
         <Label>Due date</Label>
         <DueDateSection control={control} />
+      </div>
+      <div className="flex min-w-0 flex-col gap-1.5">
+        <FieldLabel htmlFor="reminderOffsetDays" optional>
+          Remind me (days before due date)
+        </FieldLabel>
+        <Input
+          id="reminderOffsetDays"
+          type="number"
+          step="1"
+          min="0"
+          {...register("reminderOffsetDays", nullableNumber)}
+        />
+        <FieldError message={errors.reminderOffsetDays?.message} />
       </div>
 
       {category === "vehicle" && (

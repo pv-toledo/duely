@@ -81,6 +81,7 @@ class Deadline(Base):
     )  # noqa: E501
     created_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
     updated_at: Mapped[datetime] = mapped_column(server_default=text("now()"))
+    reminder_offset_days: Mapped[int | None] = mapped_column(server_default=text("3"))
 
 
 class NotificationLog(Base):

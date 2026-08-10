@@ -13,6 +13,11 @@ const baseFields = {
   issuerName: optionalText(),
   dueDate: z.string().nullable(),
   hasNoDueDate: z.boolean(),
+  reminderOffsetDays: z
+    .number()
+    .int("Must be a whole number")
+    .min(0, "Must be zero or greater")
+    .nullable(),
 };
 
 const vehicleSchema = z.object({
@@ -97,4 +102,5 @@ export type ReviewFormInput = {
   documentDate: string;
   description: string;
   referencePeriod: string;
+  reminderOffsetDays: string;
 };
