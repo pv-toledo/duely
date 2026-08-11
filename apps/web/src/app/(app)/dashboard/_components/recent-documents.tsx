@@ -1,8 +1,8 @@
 import Link from "next/link";
-import type { DocumentStatus } from "@duely/shared";
 import { truncateFilename } from "@/lib/format-filename";
 import { DocumentStatusBadge } from "../../_components/document-status-badge";
 import { getDocumentHref, getDocumentAriaLabel } from "../../document-links";
+import { DocumentStatus } from "@duely/shared/src/db-enums";
 
 export type RecentDocument = {
   id: string;
@@ -12,7 +12,13 @@ export type RecentDocument = {
   title: string | null;
 };
 
-export function RecentDocuments({ documents }: { documents: RecentDocument[] }) {
+export function RecentDocuments({
+  documents,
+  disableLinks = false,
+}: {
+  documents: RecentDocument[];
+  disableLinks?: boolean;
+}) {
   if (documents.length === 0) {
     return <p className="text-sm text-muted-foreground">No documents yet.</p>;
   }
@@ -20,7 +26,7 @@ export function RecentDocuments({ documents }: { documents: RecentDocument[] }) 
   return (
     <div className="flex flex-col gap-2">
       {documents.map((document) => {
-        const href = getDocumentHref(document.id, document.status);
+        const href = disableLinks ? null : getDocumentHref(document.id, document.status);
         const displayName = document.title ?? truncateFilename(document.original_filename);
         const ariaLabel = getDocumentAriaLabel(document.status, document.original_filename);
 

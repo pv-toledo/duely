@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CalendarClock, FileText, LayoutDashboard } from "lucide-react";
@@ -17,16 +16,21 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const NAV_ITEMS = [
+const DEFAULT_NAV_ITEMS = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Documents", url: "/documents", icon: FileText },
   { title: "Deadlines", url: "/deadlines", icon: CalendarClock },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({
+  basePath = "",
+  navItems = DEFAULT_NAV_ITEMS,
+}: {
+  basePath?: string;
+  navItems?: typeof DEFAULT_NAV_ITEMS;
+} = {}) {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
-
   return (
     <Sidebar collapsible="icon">
       {isMobile && (
@@ -38,18 +42,21 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {NAV_ITEMS.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton
-                    isActive={pathname === item.url}
-                    tooltip={item.title}
-                    render={<Link href={item.url} onClick={() => setOpenMobile(false)} />}
-                  >
-                    <item.icon />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {navItems.map((item) => {
+                const href = `${basePath}${item.url}`;
+                return (
+                  <SidebarMenuItem key={item.url}>
+                    <SidebarMenuButton
+                      isActive={pathname === href}
+                      tooltip={item.title}
+                      render={<Link href={href} onClick={() => setOpenMobile(false)} />}
+                    >
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -25,13 +25,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { DocumentLanguage } from "@duely/shared";
 
 import { isRecurringInterval, addInterval } from "../recurrence";
 import { updateDeadlineStatusAction } from "../deadline-actions";
 import { formatAmount } from "../format-amount";
 import { EditDeadlineDialog } from "./edit-deadline-dialog";
 import Link from "next/link";
+import { DocumentLanguage } from "@duely/shared/src/db-enums";
 
 export type DashboardDeadline = {
   id: string;
@@ -68,9 +68,11 @@ function buildDoneDescription(deadline: DashboardDeadline): string {
 export function DeadlineRow({
   deadline,
   isOverdue,
+  onStatusChange,
 }: {
   deadline: DashboardDeadline;
   isOverdue: boolean;
+  onStatusChange?: (id: string, status: "done" | "dismissed") => void;
 }) {
   const [isPending, startTransition] = useTransition();
   const [doneDialogOpen, setDoneDialogOpen] = useState(false);
@@ -80,6 +82,11 @@ export function DeadlineRow({
   const days = daysUntil(deadline.due_date);
 
   function handleStatusChange(newStatus: "done" | "dismissed") {
+    if (onStatusChange) {
+      onStatusChange(deadline.id, newStatus);
+      setDoneDialogOpen(false);
+      return;
+    }
     startTransition(async () => {
       await updateDeadlineStatusAction(deadline.id, newStatus);
       setDoneDialogOpen(false);
