@@ -9,7 +9,7 @@ from db.reminders_repository import (
     get_user_email,
     record_notification_sent,
 )
-from services.reminders.email_client import BrevoEmailClient
+from services.reminders.email_client import ResendEmailClient
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ def _format_due_date(due_date: date) -> str:
     return due_date.strftime("%B %d, %Y")
 
 
-async def run_reminder_job(email_client: BrevoEmailClient, app_base_url: str) -> None:
+async def run_reminder_job(email_client: ResendEmailClient, app_base_url: str) -> None:
     deadlines = await get_eligible_deadlines_for_reminders()
     logger.info("reminder_job_started", extra={"eligible_count": len(deadlines)})
 
@@ -54,7 +54,7 @@ async def run_reminder_job(email_client: BrevoEmailClient, app_base_url: str) ->
 
 
 async def _send_reminder_for_deadline(
-    deadline, template: jinja2.Template, email_client: BrevoEmailClient, app_base_url: str
+    deadline, template: jinja2.Template, email_client: ResendEmailClient, app_base_url: str
 ) -> None:
     email = await get_user_email(deadline.user_id)
     if email is None:

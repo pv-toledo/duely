@@ -1,17 +1,17 @@
 import httpx2
 
-BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
+RESEND_API_URL = "https://api.resend.com/emails"
 SENDER_NAME = "Duely"
 
 
 class EmailSendError(Exception):
-    """Raised when sending a reminder email via Brevo fails."""
+    """Raised when sending a reminder email via Resend fails."""
 
 
-class BrevoEmailClient:
+class ResendEmailClient:
     def __init__(self, api_key: str, sender_email: str) -> None:
         self._client = httpx2.AsyncClient(
-            headers={"api-key": api_key, "content-type": "application/json"}
+            headers={"Authorization": f"Bearer {api_key}", "content-type": "application/json"}
         )
         self._sender_email = sender_email
 
@@ -23,13 +23,15 @@ class BrevoEmailClient:
         timeout_seconds: float = 30.0,
     ) -> None:
         payload = {
-            "sender": {"name": SENDER_NAME, "email": self._sender_email},
-            "to": [{"email": to_email}],
+            "from": f"{SENDER_NAME} <{self._sender_email}>",
+            "to": [to_email],
             "subject": subject,
-            "htmlContent": html_content,
+            "html": html_content,
         }
         try:
-            response = await self._client.post(BREVO_API_URL, json=payload, timeout=timeout_seconds)
+            response = await self._client.post(
+                RESEND_API_URL, json=payload, timeout=timeout_seconds
+            )
             response.raise_for_status()
         except httpx2.HTTPStatusError as e:
             raise EmailSendError(f"{e.response.status_code} sending email to {to_email}") from e
