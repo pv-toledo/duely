@@ -36,7 +36,7 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (isAuthenticated && authRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/account", request.url));
+    return NextResponse.redirect(new URL("/documents", request.url));
   }
 
   return supabaseResponse;

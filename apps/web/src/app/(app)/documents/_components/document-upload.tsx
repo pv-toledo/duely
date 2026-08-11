@@ -4,13 +4,19 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { FormButton } from "@/components/form-controls";
 import { Camera, CircleAlert, CircleCheck, Upload } from "lucide-react";
-import { uploadDocumentAction, type UploadFailureReason } from "../actions";
+import {
+  uploadDocumentAction,
+  confirmHeicUploadAction,
+  type UploadFailureReason,
+  type ConvertHeicFailureReason,
+} from "../actions";
 import { ALLOWED_MIME_TYPES, MAX_UPLOAD_SIZE_BYTES } from "@/lib/upload/constraints";
 import { checkImageResolution } from "@/lib/upload/check-image-resolution";
 import { compressImageToWebp, withExtension } from "@/lib/upload/compress-image";
 import { getRawInputSizeCeiling, validateFileTypeAndSize } from "@/lib/upload/validate-file";
+import { uploadHeicDirectly } from "@/lib/upload/upload-heic-directly";
 
-type ClientFailureReason = UploadFailureReason | "compression_failed";
+type ClientFailureReason = UploadFailureReason | ConvertHeicFailureReason | "compression_failed";
 
 const ERROR_MESSAGES: Record<ClientFailureReason, string> = {
   not_authenticated: "Your session expired. Please sign in again.",
@@ -22,9 +28,25 @@ const ERROR_MESSAGES: Record<ClientFailureReason, string> = {
   insert_failed: "Something went wrong saving your document. Try again.",
   compression_failed:
     "We couldn't prepare this photo for upload. Try a different photo or a smaller file.",
+  not_found: "We couldn't find your uploaded file. Try again.",
+  conversion_failed: "We couldn't process this photo. Try a different one.",
 };
 
 const SUCCESS_FLASH_DURATION_MS = 3000;
+function normalizeHeicFile(file: File): File {
+  const hasHeicType = file.type === "image/heic" || file.type === "image/heif";
+  if (hasHeicType) return file;
+
+  const lowerName = file.name.toLowerCase();
+  if (lowerName.endsWith(".heic")) {
+    return new File([file], file.name, { type: "image/heic" });
+  }
+  if (lowerName.endsWith(".heif")) {
+    return new File([file], file.name, { type: "image/heif" });
+  }
+
+  return file;
+}
 
 export function DocumentUpload() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -42,7 +64,9 @@ export function DocumentUpload() {
     return () => clearTimeout(timeout);
   }, [isSuccess]);
 
-  async function handleFile(file: File) {
+  async function handleFile(rawFile: File) {
+    const file = normalizeHeicFile(rawFile);
+
     setErrorMessage(null);
     setIsSuccess(false);
     setIsProcessing(true);
@@ -51,6 +75,31 @@ export function DocumentUpload() {
       const rawValidation = validateFileTypeAndSize(file, getRawInputSizeCeiling(file));
       if (!rawValidation.valid) {
         setErrorMessage(ERROR_MESSAGES[rawValidation.reason]);
+        return;
+      }
+
+      const isHeic = file.type === "image/heic" || file.type === "image/heif";
+
+      if (isHeic) {
+        startTransition(async () => {
+          const uploadResult = await uploadHeicDirectly(file);
+          if (!uploadResult) {
+            setErrorMessage(ERROR_MESSAGES.upload_failed);
+            return;
+          }
+
+          const result = await confirmHeicUploadAction({
+            documentId: uploadResult.documentId,
+            storagePath: uploadResult.storagePath,
+            originalFilename: file.name,
+          });
+
+          if (!result.success) {
+            setErrorMessage(ERROR_MESSAGES[result.reason]);
+            return;
+          }
+          setIsSuccess(true);
+        });
         return;
       }
 
