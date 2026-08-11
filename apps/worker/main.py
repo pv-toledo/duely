@@ -7,6 +7,8 @@ from api.health import router as health_router
 from config import settings
 from services.extraction.client import GeminiExtractionClient
 from services.poller import DocumentPoller
+from services.reminders.email_client import BrevoEmailClient
+from services.reminders.scheduler import build_reminder_scheduler
 from services.storage import SupabaseStorageClient
 
 logging.basicConfig(level=logging.INFO)
@@ -21,7 +23,19 @@ async def lifespan(app: FastAPI):
     )
     poller = DocumentPoller(extraction_client=extraction_client, storage_client=storage_client)
     poller.start()
+
+    email_client = BrevoEmailClient(
+        api_key=settings.brevo_api_key, sender_email=settings.brevo_sender_email
+    )
+    reminder_scheduler = build_reminder_scheduler(
+        email_client=email_client, app_base_url=settings.app_base_url
+    )
+    reminder_scheduler.start()
+
     yield
+
+    reminder_scheduler.shutdown()
+    await email_client.aclose()
     await poller.stop()
     await storage_client.aclose()
 

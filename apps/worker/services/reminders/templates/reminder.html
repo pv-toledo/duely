@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <body style="margin: 0; padding: 24px; background-color: #f4f4f4; font-family: -apple-system, sans-serif;">
+    <table role="presentation" width="100%" style="max-width: 480px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;">
+      <tr>
+        <td style="padding: 32px;">
+          <p style="margin: 0 0 24px 0; font-size: 14px; font-weight: 600; color: #16161d; letter-spacing: -0.01em;">
+            Duely
+          </p>
+
+          <p style="margin: 0 0 8px 0; font-size: 18px; font-weight: 600; color: #16161d;">
+            {{ title }}
+          </p>
+
+          <p style="margin: 0 0 16px 0; font-size: 14px; color: #555555;">
+            Due {{ due_date_formatted }}
+            {% if amount_label %}&middot; {{ amount_label }}{% endif %}
+          </p>
+
+          
+            href="{{ app_url }}"
+            style="display: inline-block; padding: 10px 20px; background-color: #16161d; color: #ffffff; text-decoration: none; font-size: 14px; border-radius: 6px;"
+          >
+            View in Duely
+          </a>
+
+          <p style="margin: 32px 0 0 0; font-size: 12px; color: #999999;">
+            This is an automated reminder from Duely. If you didn't expect this, you can safely ignore it.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
