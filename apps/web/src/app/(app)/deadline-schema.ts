@@ -6,6 +6,11 @@ export const manualDeadlineSchema = z
     dueDate: z.string().nullable(),
     amount: z.number().nullable(),
     recurrence: z.enum(["none", "monthly", "yearly"]),
+    reminderOffsetDays: z
+      .number()
+      .int("Must be a whole number")
+      .min(0, "Must be zero or greater")
+      .nullable(),
   })
   .superRefine((data, ctx) => {
     if (!data.dueDate) {
@@ -18,4 +23,5 @@ export type ManualDeadlineFormInput = {
   dueDate: string | null;
   amount: string;
   recurrence: "none" | "monthly" | "yearly";
+  reminderOffsetDays: string;
 };

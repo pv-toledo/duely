@@ -39,6 +39,7 @@ export type DashboardDeadline = {
   due_date: string;
   amount: number | null;
   recurrence: string;
+  reminder_offset_days: number | null;
   document_id: string | null;
   documents: { search_language: DocumentLanguage | null } | null;
 };
@@ -126,6 +127,7 @@ export function DeadlineRow({
             dueDate={deadline.due_date}
             amount={deadline.amount}
             recurrence={deadline.recurrence as "none" | "monthly" | "yearly"}
+            reminderOffsetDays={deadline.reminder_offset_days}
           />
         ) : (
           <Link

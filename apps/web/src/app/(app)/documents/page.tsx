@@ -2,6 +2,11 @@ import { createClient } from "@/lib/supabase/server";
 import { DocumentUpload } from "./_components/document-upload";
 import { DocumentList, type DocumentListItem } from "./_components/document-list";
 import { QuotaPausedBanner } from "./_components/quota-paused-banner";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Documents",
+};
 
 export default async function DocumentsPage() {
   const supabase = await createClient();

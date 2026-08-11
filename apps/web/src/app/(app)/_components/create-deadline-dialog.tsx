@@ -41,6 +41,7 @@ export function CreateDeadlineDialog() {
       dueDate: null,
       amount: "",
       recurrence: "none",
+      reminderOffsetDays: "3",
     },
   });
 
@@ -52,6 +53,8 @@ export function CreateDeadlineDialog() {
       dueDate: values.dueDate as string,
       amount: values.amount === "" ? null : Number(values.amount),
       recurrence: values.recurrence,
+      reminderOffsetDays:
+        values.reminderOffsetDays === "" ? null : Number(values.reminderOffsetDays),
     });
 
     if (!result.success) {

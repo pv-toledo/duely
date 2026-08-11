@@ -4,6 +4,11 @@ import { DashboardStats } from "./_components/dashboard-stats";
 import { DeadlineRow, type DashboardDeadline } from "../_components/deadline-row";
 import { RecentDocuments, type RecentDocument } from "./_components/recent-documents";
 import { CreateDeadlineDialog } from "../_components/create-deadline-dialog";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 function toDateString(date: Date): string {
   const year = date.getFullYear();
@@ -23,7 +28,9 @@ export default async function DashboardPage() {
     await Promise.all([
       supabase
         .from("deadlines")
-        .select("id, title, due_date, amount, recurrence, document_id, documents(search_language)")
+        .select(
+          "id, title, due_date, amount, recurrence, reminder_offset_days, document_id, documents(search_language)"
+        )
         .eq("status", "active")
         .lte("due_date", in30DaysStr)
         .order("due_date", { ascending: true }),
@@ -47,6 +54,7 @@ export default async function DashboardPage() {
       due_date: row.due_date,
       amount: row.amount,
       recurrence: row.recurrence,
+      reminder_offset_days: row.reminder_offset_days,
       document_id: row.document_id,
       documents: {
         search_language: rawLanguage && isDocumentLanguage(rawLanguage) ? rawLanguage : null,

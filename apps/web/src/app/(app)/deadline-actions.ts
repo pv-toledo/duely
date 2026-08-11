@@ -54,6 +54,7 @@ export async function createManualDeadlineAction(input: {
   dueDate: string;
   amount: number | null;
   recurrence: "none" | "monthly" | "yearly";
+  reminderOffsetDays: number | null;
 }): Promise<{ success: boolean }> {
   const supabase = await createClient();
   const { data: claimsData } = await supabase.auth.getClaims();
@@ -70,6 +71,7 @@ export async function createManualDeadlineAction(input: {
     due_date: input.dueDate,
     amount: input.amount,
     recurrence: input.recurrence,
+    reminder_offset_days: input.reminderOffsetDays,
     status: "active",
   });
 
@@ -89,6 +91,7 @@ export async function updateManualDeadlineAction(
     dueDate: string;
     amount: number | null;
     recurrence: "none" | "monthly" | "yearly";
+    reminderOffsetDays: number | null;
   }
 ): Promise<{ success: boolean }> {
   const supabase = await createClient();
@@ -100,6 +103,7 @@ export async function updateManualDeadlineAction(
       due_date: input.dueDate,
       amount: input.amount,
       recurrence: input.recurrence,
+      reminder_offset_days: input.reminderOffsetDays,
     })
     .eq("id", deadlineId);
 

@@ -21,7 +21,10 @@ export const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Duely",
+  title: {
+    default: "Duely",
+    template: "%s · Duely",
+  },
   description: "Adult life, organized by a photo",
 };
 

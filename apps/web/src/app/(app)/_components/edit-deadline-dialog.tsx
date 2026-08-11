@@ -29,12 +29,14 @@ export function EditDeadlineDialog({
   dueDate,
   amount,
   recurrence,
+  reminderOffsetDays,
 }: {
   deadlineId: string;
   title: string;
   dueDate: string;
   amount: number | null;
   recurrence: "none" | "monthly" | "yearly";
+  reminderOffsetDays: number | null;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -53,6 +55,7 @@ export function EditDeadlineDialog({
       dueDate,
       amount: amount !== null ? String(amount) : "",
       recurrence,
+      reminderOffsetDays: reminderOffsetDays !== null ? String(reminderOffsetDays) : "",
     },
   });
 
@@ -63,6 +66,7 @@ export function EditDeadlineDialog({
         dueDate,
         amount: amount !== null ? String(amount) : "",
         recurrence,
+        reminderOffsetDays: reminderOffsetDays !== null ? String(reminderOffsetDays) : "",
       });
       setSubmitError(null);
     }
@@ -77,6 +81,8 @@ export function EditDeadlineDialog({
       dueDate: values.dueDate as string,
       amount: values.amount === "" ? null : Number(values.amount),
       recurrence: values.recurrence,
+      reminderOffsetDays:
+        values.reminderOffsetDays === "" ? null : Number(values.reminderOffsetDays),
     });
 
     if (!result.success) {

@@ -55,6 +55,20 @@ export function DeadlineFormFields({
       </div>
 
       <div className="flex flex-col gap-1.5">
+        <FieldLabel htmlFor="reminderOffsetDays" optional>
+          Remind me (days before due date)
+        </FieldLabel>
+        <Input
+          id="reminderOffsetDays"
+          type="number"
+          step="1"
+          min="0"
+          {...register("reminderOffsetDays", nullableNumber)}
+        />
+        <FieldError message={errors.reminderOffsetDays?.message} />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
         <FieldLabel htmlFor="amount" optional>
           Amount
         </FieldLabel>

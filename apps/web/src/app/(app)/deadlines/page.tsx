@@ -4,6 +4,7 @@ import { DeadlineRow, type DashboardDeadline } from "../_components/deadline-row
 import { DeadlineHistoryRow, type DeadlineHistoryItem } from "./_components/deadline-history-row";
 import { CreateDeadlineDialog } from "../_components/create-deadline-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Metadata } from "next";
 
 function toDateString(date: Date): string {
   const year = date.getFullYear();
@@ -12,6 +13,10 @@ function toDateString(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+export const metadata: Metadata = {
+  title: "Deadlines",
+};
+
 export default async function DeadlinesPage() {
   const supabase = await createClient();
   const todayStr = toDateString(new Date());
@@ -19,7 +24,7 @@ export default async function DeadlinesPage() {
   const { data } = await supabase
     .from("deadlines")
     .select(
-      "id, title, due_date, amount, recurrence, status, updated_at, document_id, documents(search_language)"
+      "id, title, due_date, amount, recurrence, status, updated_at, reminder_offset_days, document_id, documents(search_language)"
     )
     .order("due_date", { ascending: true });
 
