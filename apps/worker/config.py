@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     supabase_secret_key: str
     google_gemini_api_key: str
     brevo_api_key: str
-    sender_email: str
+    brevo_sender_email: str
     app_base_url: str
 
 
