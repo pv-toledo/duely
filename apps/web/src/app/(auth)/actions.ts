@@ -1,12 +1,12 @@
-"use server";
-
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { resolveOrigin } from "@/lib/resolve-origin";
-import { signupSchema, loginSchema, type SignupCredentials, type LoginCredentials } from "./schema";
 
-export async function signup(credentials: SignupCredentials) {
+import { signupSchema, loginSchema, type SignupCredentials, type LoginCredentials } from "./schema";
+import { resolveSafeRedirect } from "@/lib/safe-direct";
+
+export async function signup(credentials: SignupCredentials, next?: string) {
   const parsed = signupSchema.safeParse(credentials);
   if (!parsed.success) {
     return { error: "Invalid input." };
@@ -19,10 +19,10 @@ export async function signup(credentials: SignupCredentials) {
     return { error: error.message };
   }
 
-  redirect("/documents");
+  redirect(resolveSafeRedirect(next, "/documents"));
 }
 
-export async function login(credentials: LoginCredentials) {
+export async function login(credentials: LoginCredentials, next?: string) {
   const parsed = loginSchema.safeParse(credentials);
   if (!parsed.success) {
     return { error: "Invalid input." };
@@ -35,7 +35,7 @@ export async function login(credentials: LoginCredentials) {
     return { error: error.message };
   }
 
-  redirect("/documents");
+  redirect(resolveSafeRedirect(next, "/documents"));
 }
 
 export async function logout() {
@@ -44,13 +44,19 @@ export async function logout() {
   redirect("/login");
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(next?: string) {
   const origin = resolveOrigin((await headers()).get("origin"));
   const supabase = await createClient();
+
+  const redirectTo = new URL(`${origin}/auth/callback`);
+  if (next) {
+    redirectTo.searchParams.set("next", next);
+  }
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: redirectTo.toString(),
     },
   });
 

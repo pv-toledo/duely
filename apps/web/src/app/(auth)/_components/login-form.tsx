@@ -10,7 +10,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { CircleAlert } from "lucide-react";
 import { useState, useTransition } from "react";
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -21,7 +21,7 @@ export function LoginForm() {
   function onSubmit(data: LoginCredentials) {
     setServerError(null);
     startTransition(async () => {
-      const result = await login(data);
+      const result = await login(data, next);
       if (result.error) {
         setServerError(result.error);
       }

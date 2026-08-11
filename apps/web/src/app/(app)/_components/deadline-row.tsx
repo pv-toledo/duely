@@ -109,7 +109,13 @@ export function DeadlineRow({
             </>
           )}
           <span aria-hidden="true">·</span>
-          <span className={cn("tabular-nums", isOverdue && "font-medium text-destructive")}>
+          <span
+            className={cn(
+              "tabular-nums",
+              isOverdue && "font-medium text-destructive",
+              !isOverdue && days === 0 && "font-medium text-warning"
+            )}
+          >
             {isOverdue
               ? `${Math.abs(days)} day${Math.abs(days) === 1 ? "" : "s"} overdue`
               : days === 0

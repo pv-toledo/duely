@@ -5,7 +5,13 @@ import { Icons } from "@/components/icons";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -13,7 +19,7 @@ export default function LoginPage() {
         <CardDescription>Enter your credentials to continue.</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
-        <LoginForm />
+        <LoginForm next={next} />
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -24,7 +30,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <form action={signInWithGoogle}>
+        <form action={signInWithGoogle.bind(null, next)}>
           <FormButton type="submit" variant="outline" className="w-full">
             <Icons.google className="size-4" />
             Continue with Google

@@ -32,7 +32,9 @@ export async function updateSession(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (!isAuthenticated && !publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   if (isAuthenticated && authRoutes.includes(pathname)) {
