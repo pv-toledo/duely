@@ -95,7 +95,9 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
 
   const categoryController = useController({ control, name: "category" });
   const documentTypeController = useController({ control, name: "documentType" });
+  const hasNoDueDateController = useController({ control, name: "hasNoDueDate" });
   const category = categoryController.field.value;
+  const hasNoDueDate = hasNoDueDateController.field.value;
 
   function handleCategoryChange(value: ReviewCategory | null) {
     categoryController.field.onChange(value);
@@ -198,6 +200,7 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
         <Label>Due date</Label>
         <DueDateSection control={control} />
       </div>
+
       <div className="flex min-w-0 flex-col gap-1.5">
         <FieldLabel htmlFor="reminderOffsetDays" optional>
           Remind me (days before due date)
@@ -207,6 +210,7 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
           type="number"
           step="1"
           min="0"
+          disabled={hasNoDueDate}
           {...register("reminderOffsetDays", nullableNumber)}
         />
         <FieldError message={errors.reminderOffsetDays?.message} />
