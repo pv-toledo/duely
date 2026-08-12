@@ -56,6 +56,7 @@ export function DemoStoreProvider({ children }: { children: React.ReactNode }) {
             title: target.title,
             due_date: target.due_date,
             amount: target.amount,
+            recurrence: target.recurrence,
             updated_at: new Date().toISOString(),
             document_id: target.document_id,
             documents: target.documents,

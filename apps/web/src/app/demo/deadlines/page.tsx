@@ -52,7 +52,12 @@ export default function DemoDeadlinesPage() {
             <p className="text-sm text-muted-foreground">No completed deadlines yet.</p>
           ) : (
             doneDeadlines.map((deadline) => (
-              <DeadlineHistoryRow key={deadline.id} deadline={deadline} actionLabel="Completed" />
+              <DeadlineHistoryRow
+                key={deadline.id}
+                deadline={deadline}
+                actionLabel="Completed"
+                disableDocumentLink
+              />
             ))
           )}
         </TabsContent>
@@ -62,7 +67,12 @@ export default function DemoDeadlinesPage() {
             <p className="text-sm text-muted-foreground">No dismissed deadlines.</p>
           ) : (
             dismissedDeadlines.map((deadline) => (
-              <DeadlineHistoryRow key={deadline.id} deadline={deadline} actionLabel="Dismissed" />
+              <DeadlineHistoryRow
+                key={deadline.id}
+                deadline={deadline}
+                actionLabel="Dismissed"
+                disableDocumentLink
+              />
             ))
           )}
         </TabsContent>

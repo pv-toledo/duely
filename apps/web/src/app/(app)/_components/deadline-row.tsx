@@ -27,7 +27,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { DocumentLanguage } from "@duely/shared";
 
-import { isRecurringInterval, addInterval } from "../recurrence";
+import { isRecurringInterval, addInterval, formatRecurrenceLabel } from "../recurrence";
 import { updateDeadlineStatusAction } from "../deadline-actions";
 import { formatAmount } from "../format-amount";
 import { EditDeadlineDialog } from "./edit-deadline-dialog";
@@ -82,6 +82,7 @@ export function DeadlineRow({
   const language = deadline.documents?.search_language ?? null;
   const amountLabel = formatAmount(deadline.amount, language);
   const days = daysUntil(deadline.due_date);
+  const recurrenceLabel = formatRecurrenceLabel(deadline.recurrence);
 
   function handleStatusChange(newStatus: "done" | "dismissed") {
     if (onStatusChange) {
@@ -111,6 +112,8 @@ export function DeadlineRow({
         )}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
           <span className="tabular-nums">{formatDate(deadline.due_date)}</span>
+          <span aria-hidden="true">·</span>
+          <span>{recurrenceLabel}</span>
           {amountLabel && (
             <>
               <span aria-hidden="true">·</span>
