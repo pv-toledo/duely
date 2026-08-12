@@ -1,9 +1,9 @@
-import { z } from "zod";
 import {
-  VEHICLE_DOCUMENT_TYPE_VALUES,
-  HEALTH_DOCUMENT_TYPE_VALUES,
   BILLS_DOCUMENT_TYPE_VALUES,
-} from "@duely/shared";
+  HEALTH_DOCUMENT_TYPE_VALUES,
+  VEHICLE_DOCUMENT_TYPE_VALUES,
+} from "@duely/shared/src/db-enums";
+import { z } from "zod";
 
 const optionalText = () => z.string().trim().nullable();
 

@@ -9,8 +9,9 @@ import {
   isDocumentCategory,
   isDocumentLanguage,
 } from "../labels";
-import type { DocumentLanguage } from "@duely/shared";
+
 import { formatAmount } from "../../format-amount";
+import { DocumentLanguage } from "@duely/shared/src/db-enums";
 
 function FieldRow({ label, value }: { label: string; value: string | null }) {
   return (
@@ -47,15 +48,15 @@ export default async function DocumentDetailPage({ params }: { params: Promise<{
     redirect("/documents");
   }
 
-  if (!document.category || !isDocumentCategory(document.category)) {
+  const rawCategory = document.category;
+  if (!rawCategory || !isDocumentCategory(rawCategory)) {
     notFound();
   }
-  const category = document.category;
+  const category = rawCategory;
 
+  const rawLanguage = document.search_language;
   const language: DocumentLanguage | null =
-    document.search_language && isDocumentLanguage(document.search_language)
-      ? document.search_language
-      : null;
+    rawLanguage && isDocumentLanguage(rawLanguage) ? rawLanguage : null;
 
   const { data: signedUrlData } = await supabase.storage
     .from("documents")

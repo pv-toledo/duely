@@ -14,13 +14,14 @@ const features = [
   {
     icon: ImageIcon,
     title: "Works with any photo",
-    description: "JPEG, PNG, even HEIC straight from your iPhone — Duely handles the conversion.",
+    description:
+      "Duely accepts JPEGs, PNGs, and even HEIC photos straight from your iPhone, converting them automatically.",
   },
   {
     icon: CheckCircle2,
     title: "Built for real life",
     description:
-      "Bills, vehicle documents, health records — one place for the paperwork adult life generates.",
+      "Bills, vehicle documents, health records. Duely gives all of adult life's paperwork one place to live.",
   },
 ];
 
@@ -36,8 +37,10 @@ export function LandingFeatures() {
             key={feature.title}
             className="flex flex-col gap-3 rounded-xl border border-border p-5"
           >
-            <feature.icon className="size-5 text-muted-foreground" />
-            <h3 className="font-medium">{feature.title}</h3>
+            <h3 className="flex items-center gap-2 font-medium">
+              <feature.icon className="size-4 text-muted-foreground" />
+              {feature.title}
+            </h3>
             <p className="text-sm leading-6 text-muted-foreground">{feature.description}</p>
           </div>
         ))}

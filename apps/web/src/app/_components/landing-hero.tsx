@@ -17,10 +17,10 @@ export function LandingHero() {
             anything&apos;s due. No folders. No spreadsheets. No missed deadlines.
           </p>
           <div className="flex w-full flex-col items-center gap-3 self-center sm:w-auto sm:flex-row sm:items-center sm:self-start">
-            <CtaLink href="/demo" variant="primary">
+            <CtaLink href="/demo" variant="primary" className="w-56 justify-center">
               Try the live demo
             </CtaLink>
-            <CtaLink href="/signup" variant="outline">
+            <CtaLink href="/signup" variant="outline" className="w-56 justify-center">
               Sign up free
             </CtaLink>
           </div>

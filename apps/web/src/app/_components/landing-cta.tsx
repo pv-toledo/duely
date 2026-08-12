@@ -12,10 +12,10 @@ export function LandingCta() {
           with your own documents.
         </p>
         <div className="flex flex-col items-center gap-3 sm:flex-row">
-          <CtaLink href="/demo" variant="primary">
+          <CtaLink href="/demo" variant="primary" className="w-56 justify-center">
             Try the live demo
           </CtaLink>
-          <CtaLink href="/signup" variant="outline">
+          <CtaLink href="/signup" variant="outline" className="w-56 justify-center">
             Sign up free
           </CtaLink>
         </div>

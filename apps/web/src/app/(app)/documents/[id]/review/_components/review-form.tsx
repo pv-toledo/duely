@@ -5,13 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm, useController, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  DOCUMENT_CATEGORY_VALUES,
-  VEHICLE_DOCUMENT_TYPE_VALUES,
-  HEALTH_DOCUMENT_TYPE_VALUES,
-  BILLS_DOCUMENT_TYPE_VALUES,
-} from "@duely/shared";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,6 +26,12 @@ import { ReviewDefaultValues } from "../defaults";
 import { FieldError } from "@/app/(app)/_components/field-error";
 import { nullableNumber } from "@/app/(app)/form-helpers";
 import { FieldLabel } from "@/app/(app)/_components/field-label";
+import {
+  BILLS_DOCUMENT_TYPE_VALUES,
+  DOCUMENT_CATEGORY_VALUES,
+  HEALTH_DOCUMENT_TYPE_VALUES,
+  VEHICLE_DOCUMENT_TYPE_VALUES,
+} from "@duely/shared/src/db-enums";
 
 const CATEGORY_ITEMS = DOCUMENT_CATEGORY_VALUES.map((value) => ({
   value,
