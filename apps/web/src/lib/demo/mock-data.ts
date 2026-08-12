@@ -1,7 +1,8 @@
+import type { DocumentStatus, DocumentLanguage, DeadlineRecurrence } from "@duely/shared";
 import type { DashboardDeadline } from "@/app/(app)/_components/deadline-row";
 import type { DeadlineHistoryItem } from "@/app/(app)/deadlines/_components/deadline-history-row";
 import type { RecentDocument } from "@/app/(app)/dashboard/_components/recent-documents";
-import { DeadlineRecurrence, DocumentLanguage, DocumentStatus } from "@duely/shared/src/db-enums";
+import type { ReviewDefaultValues } from "@/app/(app)/documents/[id]/review/defaults";
 
 function daysFromToday(offset: number): string {
   const d = new Date();
@@ -21,14 +22,14 @@ function isoNow(offsetDays = 0): string {
 export const DEMO_DOCUMENTS: RecentDocument[] = [
   {
     id: "demo-doc-electricity",
-    original_filename: "conta_luz_agosto.jpg",
+    original_filename: "electricity_bill_august.jpg",
     status: "needs_review" satisfies DocumentStatus,
     created_at: isoNow(-1),
     title: null,
   },
   {
     id: "demo-doc-insurance",
-    original_filename: "seguro_veiculo.pdf",
+    original_filename: "car_insurance.pdf",
     status: "archived" satisfies DocumentStatus,
     created_at: isoNow(-3),
     title: "Vehicle insurance — Porto Seguro",
@@ -42,31 +43,38 @@ export const DEMO_DOCUMENTS: RecentDocument[] = [
   },
   {
     id: "demo-doc-internet",
-    original_filename: "fatura_internet.pdf",
+    original_filename: "bill_internet.pdf",
     status: "archived" satisfies DocumentStatus,
     created_at: isoNow(-8),
     title: "Internet bill — Claro",
   },
   {
     id: "demo-doc-processing",
-    original_filename: "recibo_condominio.jpg",
+    original_filename: "condo_receipt.jpg",
     status: "processing" satisfies DocumentStatus,
     created_at: isoNow(0),
     title: null,
   },
 ];
 
+export const DEMO_REVIEW_DEFAULTS: ReviewDefaultValues = {
+  category: "bills",
+  documentType: "utility_electricity",
+  subjectName: null,
+  issuerName: "Enel Energy",
+  title: "Electricity Bill — Enel Energy",
+  dueDate: daysFromToday(2),
+  hasNoDueDate: false,
+  amount: 84.5,
+  documentNumber: null,
+  plate: null,
+  documentDate: null,
+  description: null,
+  referencePeriod: "Aug 2026",
+  reminderOffsetDays: 3,
+};
+
 export const DEMO_DEADLINES: DashboardDeadline[] = [
-  {
-    id: "demo-deadline-electricity",
-    title: "Electricity bill",
-    due_date: daysFromToday(-2),
-    amount: 214.9,
-    recurrence: "monthly" satisfies DeadlineRecurrence,
-    reminder_offset_days: 3,
-    document_id: "demo-doc-electricity",
-    documents: { search_language: "pt" as DocumentLanguage },
-  },
   {
     id: "demo-deadline-insurance",
     title: "Vehicle insurance renewal",

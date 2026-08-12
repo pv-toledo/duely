@@ -3,6 +3,9 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { DashboardDeadline } from "@/app/(app)/_components/deadline-row";
 import type { DeadlineHistoryItem } from "@/app/(app)/deadlines/_components/deadline-history-row";
+import type { RecentDocument } from "@/app/(app)/dashboard/_components/recent-documents";
+import type { ReviewConfirmPayload } from "@/app/(app)/documents/[id]/review/_components/review-form";
+import type { DocumentLanguage } from "@duely/shared";
 import { isRecurringInterval, addInterval } from "@/app/(app)/recurrence";
 import { DEMO_DEADLINES, DEMO_DEADLINE_HISTORY, DEMO_DOCUMENTS } from "./mock-data";
 
@@ -12,8 +15,9 @@ type DemoStoreValue = {
   activeDeadlines: DashboardDeadline[];
   doneDeadlines: DeadlineHistoryItem[];
   dismissedDeadlines: DeadlineHistoryItem[];
-  documents: typeof DEMO_DOCUMENTS;
+  documents: RecentDocument[];
   markDeadline: (id: string, status: "done" | "dismissed") => void;
+  confirmReview: (documentId: string, payload: ReviewConfirmPayload) => { success: boolean };
 };
 
 const DemoStoreContext = createContext<DemoStoreValue | null>(null);
@@ -21,6 +25,7 @@ const DemoStoreContext = createContext<DemoStoreValue | null>(null);
 export function DemoStoreProvider({ children }: { children: React.ReactNode }) {
   const [activeDeadlines, setActiveDeadlines] = useState<DashboardDeadline[]>(DEMO_DEADLINES);
   const [history, setHistory] = useState<HistoryEntry[]>(DEMO_DEADLINE_HISTORY);
+  const [documents, setDocuments] = useState<RecentDocument[]>(DEMO_DOCUMENTS);
 
   const markDeadline = useCallback(
     (id: string, status: "done" | "dismissed") => {
@@ -62,15 +67,42 @@ export function DemoStoreProvider({ children }: { children: React.ReactNode }) {
     [activeDeadlines]
   );
 
+  const confirmReview = useCallback((documentId: string, payload: ReviewConfirmPayload) => {
+    setDocuments((current) =>
+      current.map((doc) =>
+        doc.id === documentId ? { ...doc, status: "archived" as const, title: payload.title } : doc
+      )
+    );
+
+    if (payload.dueDate) {
+      setActiveDeadlines((current) => [
+        ...current,
+        {
+          id: `${documentId}-deadline-${Date.now()}`,
+          title: payload.title,
+          due_date: payload.dueDate as string,
+          amount: payload.amount,
+          recurrence: "none",
+          reminder_offset_days: payload.reminderOffsetDays,
+          document_id: documentId,
+          documents: { search_language: "en" as DocumentLanguage },
+        },
+      ]);
+    }
+
+    return { success: true };
+  }, []);
+
   const value = useMemo<DemoStoreValue>(
     () => ({
       activeDeadlines,
       doneDeadlines: history.filter((h) => h.actionLabel === "Completed").map((h) => h.entry),
       dismissedDeadlines: history.filter((h) => h.actionLabel === "Dismissed").map((h) => h.entry),
-      documents: DEMO_DOCUMENTS,
+      documents,
       markDeadline,
+      confirmReview,
     }),
-    [activeDeadlines, history, markDeadline]
+    [activeDeadlines, history, documents, markDeadline, confirmReview]
   );
 
   return <DemoStoreContext.Provider value={value}>{children}</DemoStoreContext.Provider>;

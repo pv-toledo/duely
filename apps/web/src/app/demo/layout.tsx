@@ -15,7 +15,7 @@ const DEMO_NAV_ITEMS = [
 export default function DemoLayout({ children }: { children: ReactNode }) {
   return (
     <DemoStoreProvider>
-      <SidebarProvider defaultOpen>
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar basePath="/demo" navItems={DEMO_NAV_ITEMS} />
         <SidebarInset>
           <DemoTopbar />

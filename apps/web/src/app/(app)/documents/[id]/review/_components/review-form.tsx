@@ -56,12 +56,43 @@ function toDisplayValue(value: string | null): string {
   return value ?? "";
 }
 
+// Shape sent to confirmDocumentReviewAction — exported so the demo layer
+// can type its in-memory override with the same contract.
+export type ReviewConfirmPayload = {
+  category: string;
+  documentType: string;
+  subjectName: string | null;
+  issuerName: string | null;
+  title: string;
+  dueDate: string | null;
+  amount: number | null;
+  documentNumber: string | null;
+  plate: string | null;
+  documentDate: string | null;
+  description: string | null;
+  referencePeriod: string | null;
+  reminderOffsetDays: number | null;
+};
+
 type ReviewFormProps = {
   documentId: string;
   defaultValues: ReviewDefaultValues;
+  /** Overrides the real Server Action call. Used by the read-only demo to
+   * update in-memory state instead of writing to Supabase. Omitted in
+   * production — behavior unchanged. */
+  onConfirmOverride?: (
+    documentId: string,
+    payload: ReviewConfirmPayload
+  ) => Promise<{ success: boolean }> | { success: boolean };
+  onSuccessOverride?: () => void;
 };
 
-export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
+export function ReviewForm({
+  documentId,
+  defaultValues,
+  onConfirmOverride,
+  onSuccessOverride,
+}: ReviewFormProps) {
   const router = useRouter();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -106,7 +137,7 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
   async function onSubmit(values: ReviewFormInput) {
     setSubmitError(null);
 
-    const result = await confirmDocumentReviewAction(documentId, {
+    const payload: ReviewConfirmPayload = {
       category: values.category as string,
       documentType: values.documentType as string,
       subjectName: values.subjectName === "" ? null : values.subjectName,
@@ -121,10 +152,19 @@ export function ReviewForm({ documentId, defaultValues }: ReviewFormProps) {
       referencePeriod: values.referencePeriod === "" ? null : values.referencePeriod,
       reminderOffsetDays:
         values.reminderOffsetDays === "" ? null : Number(values.reminderOffsetDays),
-    });
+    };
+
+    const result = onConfirmOverride
+      ? await onConfirmOverride(documentId, payload)
+      : await confirmDocumentReviewAction(documentId, payload);
 
     if (!result.success) {
       setSubmitError("Couldn't confirm this document. Please try again.");
+      return;
+    }
+
+    if (onSuccessOverride) {
+      onSuccessOverride();
       return;
     }
 

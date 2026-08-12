@@ -41,6 +41,7 @@ export default function DemoDeadlinesPage() {
                 deadline={deadline}
                 isOverdue={deadline.due_date < todayStr}
                 onStatusChange={markDeadline}
+                disableDocumentLink
               />
             ))
           )}

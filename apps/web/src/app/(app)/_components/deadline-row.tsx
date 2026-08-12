@@ -25,13 +25,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { DocumentLanguage } from "@duely/shared";
 
 import { isRecurringInterval, addInterval } from "../recurrence";
 import { updateDeadlineStatusAction } from "../deadline-actions";
 import { formatAmount } from "../format-amount";
 import { EditDeadlineDialog } from "./edit-deadline-dialog";
 import Link from "next/link";
-import { DocumentLanguage } from "@duely/shared/src/db-enums";
 
 export type DashboardDeadline = {
   id: string;
@@ -69,10 +69,12 @@ export function DeadlineRow({
   deadline,
   isOverdue,
   onStatusChange,
+  disableDocumentLink = false,
 }: {
   deadline: DashboardDeadline;
   isOverdue: boolean;
   onStatusChange?: (id: string, status: "done" | "dismissed") => void;
+  disableDocumentLink?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [doneDialogOpen, setDoneDialogOpen] = useState(false);
@@ -96,7 +98,7 @@ export function DeadlineRow({
   return (
     <div className="flex items-center justify-between gap-4 rounded-lg border border-border p-4">
       <div className="flex min-w-0 flex-1 flex-col gap-1">
-        {deadline.document_id ? (
+        {deadline.document_id && !disableDocumentLink ? (
           <Link
             href={`/documents/${deadline.document_id}`}
             className="min-w-0 truncate text-sm font-medium hover:underline"
@@ -142,6 +144,14 @@ export function DeadlineRow({
             recurrence={deadline.recurrence as "none" | "monthly" | "yearly"}
             reminderOffsetDays={deadline.reminder_offset_days}
           />
+        ) : disableDocumentLink ? (
+          <span
+            aria-label="View source document (unavailable in demo)"
+            title="Sign up to view the source document"
+            className="cursor-not-allowed text-muted-foreground/50"
+          >
+            <FileText className="size-4" />
+          </span>
         ) : (
           <Link
             href={`/documents/${deadline.document_id}`}

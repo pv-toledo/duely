@@ -5,6 +5,7 @@ import { Sparkles, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CtaLink } from "./cta-link";
 
 type TeaserState = "idle" | "analyzing" | "done";
 
@@ -72,25 +73,30 @@ export function ReceiptTeaser() {
         )}
 
         {state === "done" && (
-          <div className="flex flex-col gap-2 rounded-lg border border-success/30 bg-success-bg p-3">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Vendor</span>
-              <span className="font-medium">Enel Energy</span>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2 rounded-lg border border-success/30 bg-success-bg p-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Vendor</span>
+                <span className="font-medium">Enel Energy</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Amount</span>
+                <span className="font-mono font-medium">$84.50</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Due date</span>
+                <span className="font-medium">Aug 28</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Category</span>
+                <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-medium text-accent-foreground">
+                  Bills
+                </span>
+              </div>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Amount</span>
-              <span className="font-mono font-medium">$84.50</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Due date</span>
-              <span className="font-medium">Aug 28</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Category</span>
-              <span className="rounded-full bg-accent px-2 py-0.5 text-xs font-medium text-accent-foreground">
-                Bills
-              </span>
-            </div>
+            <CtaLink href="/demo" variant="outline" className="w-full justify-center">
+              See it with real deadlines
+            </CtaLink>
           </div>
         )}
       </CardContent>

@@ -1,10 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { DashboardStats } from "@/app/(app)/dashboard/_components/dashboard-stats";
 import { DeadlineRow } from "@/app/(app)/_components/deadline-row";
-import { RecentDocuments } from "@/app/(app)/dashboard/_components/recent-documents";
+import {
+  RecentDocuments,
+  type RecentDocument,
+} from "@/app/(app)/dashboard/_components/recent-documents";
 import { useDemoStore } from "@/lib/demo/demo-store";
 import { DemoCreateDeadlineButton } from "../_components/demo-create-deadline-button";
+import { DemoReviewDialog } from "../_components/demo-review-dialog";
 
 function toDateString(date: Date): string {
   const year = date.getFullYear();
@@ -15,10 +20,13 @@ function toDateString(date: Date): string {
 
 export default function DemoDashboardPage() {
   const { activeDeadlines, documents, markDeadline } = useDemoStore();
-  const todayStr = toDateString(new Date());
-
-  const overdueDeadlines = activeDeadlines.filter((d) => d.due_date < todayStr);
-  const upcomingDeadlines = activeDeadlines.filter((d) => d.due_date >= todayStr);
+  const now = new Date();
+  const todayStr = toDateString(now);
+  const in30DaysStr = toDateString(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 30));
+  const [reviewTarget, setReviewTarget] = useState<RecentDocument | null>(null);
+  const withinWindow = activeDeadlines.filter((d) => d.due_date <= in30DaysStr);
+  const overdueDeadlines = withinWindow.filter((d) => d.due_date < todayStr);
+  const upcomingDeadlines = withinWindow.filter((d) => d.due_date >= todayStr);
   const needsReviewCount = documents.filter((d) => d.status === "needs_review").length;
 
   return (
@@ -44,6 +52,7 @@ export default function DemoDashboardPage() {
                 deadline={deadline}
                 isOverdue
                 onStatusChange={markDeadline}
+                disableDocumentLink
               />
             ))}
           </div>
@@ -62,6 +71,7 @@ export default function DemoDashboardPage() {
                 deadline={deadline}
                 isOverdue={false}
                 onStatusChange={markDeadline}
+                disableDocumentLink
               />
             ))}
           </div>
@@ -70,8 +80,23 @@ export default function DemoDashboardPage() {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-medium">Recent documents</h2>
-        <RecentDocuments documents={documents} disableLinks />
+        <RecentDocuments
+          documents={documents}
+          disableLinks
+          onDocumentClick={(doc) => setReviewTarget(doc)}
+        />
       </section>
+
+      {reviewTarget && (
+        <DemoReviewDialog
+          documentId={reviewTarget.id}
+          originalFilename={reviewTarget.original_filename}
+          open={reviewTarget !== null}
+          onOpenChange={(open) => {
+            if (!open) setReviewTarget(null);
+          }}
+        />
+      )}
     </div>
   );
 }

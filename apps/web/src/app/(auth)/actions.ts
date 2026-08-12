@@ -40,12 +40,6 @@ export async function login(credentials: LoginCredentials, next?: string) {
   redirect(resolveSafeRedirect(next, "/documents"));
 }
 
-export async function logout() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
-  redirect("/login");
-}
-
 export async function signInWithGoogle(next?: string) {
   const origin = resolveOrigin((await headers()).get("origin"));
   const supabase = await createClient();

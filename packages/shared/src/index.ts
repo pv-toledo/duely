@@ -1,6 +1,6 @@
 export * from "./db-enums";
 
-export type VehicleDocumentType = "drivers_license" | "vehicle_registration" | "insurance";
+import type { VehicleDocumentType, HealthDocumentType, BillsDocumentType } from "./db-enums";
 
 export interface VehicleFields {
   document_type: VehicleDocumentType;
@@ -12,8 +12,6 @@ export interface VehicleFields {
   amount: number | null;
 }
 
-export type HealthDocumentType = "exam_result" | "prescription" | "vaccination_record";
-
 export interface HealthFields {
   document_type: HealthDocumentType;
   subject_name: string;
@@ -22,14 +20,6 @@ export interface HealthFields {
   due_date: string | null; // ISO 8601
   description: string;
 }
-
-export type BillsDocumentType =
-  | "utility_water"
-  | "utility_electricity"
-  | "utility_gas"
-  | "condo_fee"
-  | "internet"
-  | "credit_card_invoice";
 
 export interface BillsFields {
   document_type: BillsDocumentType;
