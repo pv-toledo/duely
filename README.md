@@ -66,7 +66,7 @@ The landing page's live preview and the [interactive demo](https://duely-app.ver
 | Hosting | Vercel (web), Render (worker) |
 | CI | GitHub Actions |
  
-## Engineering decisions worth reading
+## Engineering decisions
  
 The interesting parts of this project are the constraints.
  
